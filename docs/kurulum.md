@@ -38,6 +38,12 @@ public OnPlayerText(playerid, text[])
     return 1;
 }
 
+public OnGameModeExit()
+{
+    LG_Shutdown();
+    return 1;
+}
+
 public OnPlayerDisconnect(playerid, reason)
 {
     LG_OnPlayerDisconnect(playerid);
@@ -46,6 +52,7 @@ public OnPlayerDisconnect(playerid, reason)
 ```
 
 > Not: `LG_Init()` çağrısı core timerları başlatır (score decay + speed tick).
+> Opsiyonel: `OnGameModeExit` içinde `LG_Shutdown()` çağırarak timerları temiz kapatabilirsiniz.
 
 ## 3) Policy ve Score Mantığı
 
@@ -89,6 +96,11 @@ Detector:
 - `LG_SPEED_DISTANCE_LIMIT`
 - `LG_SPEED_ABSURD_DISTANCE`
 - `LG_SPEED_SKIP_MS`
+
+Score loglama:
+
+- `LG_SCORE_LOG_ENABLED` (`1`: aktif, `0`: tamamen sessiz)
+- `LG_SCORE_LOG_THROTTLE_MS` (aynı oyuncu + kategori logları için minimum bekleme süresi)
 
 Soft aksiyon override:
 

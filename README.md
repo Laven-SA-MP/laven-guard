@@ -49,9 +49,9 @@ public OnPlayerText(playerid, text[])
     return 1;
 }
 
-public OnPlayerDisconnect(playerid, reason)
+public OnGameModeExit()
 {
-    LG_OnPlayerDisconnect(playerid);
+    LG_Shutdown();
     return 1;
 }
 ```

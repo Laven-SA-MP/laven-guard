@@ -17,17 +17,33 @@ stock LG_ScoreAdd(playerid, E_LG_SCORE_CATEGORY:category, amount, const reason[]
         LG_Score[playerid][LG_SCORE_TOTAL] += amount;
     }
 
-    new logMessage[144];
-    format(
-        logMessage,
-        sizeof(logMessage),
-        "Score eklendi p:%d c:%d +%d (%s)",
-        playerid,
-        _:category,
-        amount,
-        reason
-    );
-    LG_Log(LG_LOG_INFO, logMessage);
+    #if LG_SCORE_LOG_ENABLED
+        new currentTick = GetTickCount();
+        new lastLogTick = LG_LastScoreLogAt[playerid][category];
+
+        if (
+            LG_SCORE_LOG_THROTTLE_MS <= 0 ||
+            lastLogTick == 0 ||
+            currentTick < lastLogTick ||
+            (currentTick - lastLogTick) >= LG_SCORE_LOG_THROTTLE_MS
+        )
+        {
+            LG_LastScoreLogAt[playerid][category] = currentTick;
+
+            new logMessage[144];
+            format(
+                logMessage,
+                sizeof(logMessage),
+                "Score eklendi p:%d c:%d +%d (%s)",
+                playerid,
+                _:category,
+                amount,
+                reason
+            );
+            LG_Log(LG_LOG_INFO, logMessage);
+        }
+    #endif
+
     return 1;
 }
 
