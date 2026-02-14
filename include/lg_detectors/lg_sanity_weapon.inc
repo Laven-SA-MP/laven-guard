@@ -9,7 +9,7 @@ stock LG_DetectorSanityWeapon(playerid)
 
     if (weaponid < LG_WEAPON_ID_MIN || weaponid > LG_WEAPON_ID_MAX)
     {
-        LG_DetectorRaise(playerid, LG_SCORE_WEAPON, LG_SANITY_SCORE_AMOUNT, "sanity weapon invalid");
+        LG_DetectorRaise(playerid, LG_SCORE_SANITY, LG_SANITY_SCORE_AMOUNT, "sanity weapon invalid");
     }
 
     LG_LastWeapon[playerid] = weaponid;
