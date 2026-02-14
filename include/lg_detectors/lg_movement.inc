@@ -152,7 +152,9 @@ stock LG_MovementAnalyzeWindow(playerid)
         if (
             LG_MoveOnFoot[playerid][next] &&
             LG_MovementAbs(dz) < LG_MOVEMENT_HOVER_DZ_EPS &&
-            LG_MoveSpeedSq[playerid][next] > LG_MOVEMENT_HOVER_MIN_HSPEED_SQ
+            LG_MoveSpeedSq[playerid][next] > LG_MOVEMENT_HOVER_MIN_HSPEED_SQ &&
+            !LG_MoveGrounded[playerid][current] &&
+            !LG_MoveGrounded[playerid][next]
         )
         {
             hoverCount++;
