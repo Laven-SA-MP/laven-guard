@@ -40,6 +40,12 @@ public OnPlayerConnect(playerid)
     return 1;
 }
 
+public OnPlayerDisconnect(playerid, reason)
+{
+    LG_OnPlayerDisconnect(playerid);
+    return 1;
+}
+
 public OnPlayerText(playerid, text[])
 {
     if (!LG_OnPlayerText(playerid, text))
@@ -54,7 +60,7 @@ public OnGameModeExit()
     LG_Shutdown();
     return 1;
 }
-```
+```
 
 > Not: `OnPlayerDisconnect` callback entegrasyonu zorunludur; player state reset işlemi için gereklidir.
 
