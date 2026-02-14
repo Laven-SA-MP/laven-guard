@@ -1,0 +1,11 @@
+# Pawn derleme çıktıları
+*.amx
+*.lst
+*.asm
+*.log
+
+# IDE / editör
+.vscode/
+.idea/
+*.swp
+*.swo
