@@ -115,6 +115,7 @@ Yeni kategoriler:
 
 - Tek döngü yaklaşımı korunur: speed tick içinde movement + sanity tick tetiklenir.
 - Movement detector ring buffer dolmadan analiz yapmaz (window hazır olmadan raise yok).
+- Hover analizi sadece grounded olmayan ardışık örneklerde aday üretir; grounded örnekler hover sayımına girmez.
 - Tüm mesafe karşılaştırmaları squared distance ile yapılır, `sqrt` çağrısı yoktur.
 - Teleport/interior/VW benzeri sıçramalarda movement kontrolü skip + reset alır.
 - Debug score log default kapalıdır (`LG_DEBUG_SCORE_LOG=0`).
