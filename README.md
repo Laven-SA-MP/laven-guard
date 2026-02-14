@@ -48,7 +48,15 @@ public OnPlayerText(playerid, text[])
     }
     return 1;
 }
+
+public OnPlayerDisconnect(playerid, reason)
+{
+    LG_OnPlayerDisconnect(playerid);
+    return 1;
+}
 ```
+
+> Not: `OnPlayerDisconnect` callback entegrasyonu zorunludur; player state reset işlemi için gereklidir.
 
 ## ⚙️ Konfigürasyon Mantığı
 
