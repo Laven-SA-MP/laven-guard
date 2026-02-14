@@ -61,7 +61,6 @@ public OnGameModeExit()
     return 1;
 }
 ```
-```
 
 
 > Not: `OnPlayerDisconnect` callback entegrasyonu zorunludur; player state reset işlemi için gereklidir.
