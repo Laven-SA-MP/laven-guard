@@ -114,6 +114,13 @@ stock E_LG_PENALTY_TYPE:LG_PolicyEvaluate(playerid, E_LG_SCORE_CATEGORY:category
     new score = LG_ScoreGet(playerid, category);
     new E_LG_PENALTY_TYPE:penalty = LG_PolicyResolve(category, score);
 
+    if (penalty != LG_PENALTY_NONE)
+    {
+        new logMessage[144];
+        format(logMessage, sizeof(logMessage), "Threshold tetiklendi p:%d c:%d score:%d (%s)", playerid, _:category, score, reason);
+        LG_Log(LG_LOG_WARN, logMessage);
+    }
+
     // RP-safe varsayilan davranis:
     // Flood = soft odakli, Speed = kick odakli, Weapon = ban odakli (detector placeholder).
     LG_PolicyApply(playerid, category, penalty, reason);

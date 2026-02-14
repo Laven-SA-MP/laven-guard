@@ -34,18 +34,20 @@ stock LG_DetectorSpeedTick()
             continue;
         }
 
+        if (LG_SpeedSkipUntil[playerid] > now)
+        {
+            continue;
+        }
+
+        if (IsPlayerInAnyVehicle(playerid))
+        {
+            continue;
+        }
+
         new Float:x;
         new Float:y;
         new Float:z;
         GetPlayerPos(playerid, x, y, z);
-
-        if (IsPlayerInAnyVehicle(playerid))
-        {
-            LG_LastPosX[playerid] = x;
-            LG_LastPosY[playerid] = y;
-            LG_LastPosZ[playerid] = z;
-            continue;
-        }
 
         new interior = GetPlayerInterior(playerid);
         if (interior != LG_LastInterior[playerid])
@@ -59,28 +61,20 @@ stock LG_DetectorSpeedTick()
             continue;
         }
 
-        if (LG_SpeedSkipUntil[playerid] > now)
-        {
-            LG_LastPosX[playerid] = x;
-            LG_LastPosY[playerid] = y;
-            LG_LastPosZ[playerid] = z;
-            continue;
-        }
-
         new Float:dx = x - LG_LastPosX[playerid];
         new Float:dy = y - LG_LastPosY[playerid];
         new Float:dz = z - LG_LastPosZ[playerid];
-        new Float:distance = floatsqroot((dx * dx) + (dy * dy) + (dz * dz));
+        new Float:distanceSq = (dx * dx) + (dy * dy) + (dz * dz);
 
-        if (distance > LG_SPEED_ABSURD_DISTANCE)
+        if (distanceSq > LG_SPEED_ABSURD_DISTANCE_SQ)
         {
             // Absurt distance kill switch: score basma, cooldown baslat, pozisyonu guncelle.
             LG_SpeedSkipUntil[playerid] = now + LG_SPEED_SKIP_MS;
 
             if ((now - LG_SpeedAbsurdWarnAt[playerid]) >= LG_SPEED_ABSURD_WARN_THROTTLE_MS)
             {
-                new logMessage[160];
-                format(logMessage, sizeof(logMessage), "Speed absurt delta ignore p:%d dist:%.2f", playerid, distance);
+                new logMessage[168];
+                format(logMessage, sizeof(logMessage), "Speed absurt delta ignore p:%d distSq:%.2f", playerid, distanceSq);
                 LG_Log(LG_LOG_WARN, logMessage);
                 LG_SpeedAbsurdWarnAt[playerid] = now;
             }
@@ -91,7 +85,7 @@ stock LG_DetectorSpeedTick()
             continue;
         }
 
-        if (distance > LG_SPEED_DISTANCE_LIMIT)
+        if (distanceSq > LG_SPEED_LIMIT_SQ)
         {
             LG_DetectorRaise(playerid, LG_SCORE_SPEED, LG_SPEED_SCORE_AMOUNT, "Speed anomaly algilandi");
             LG_SpeedSkipUntil[playerid] = now + LG_SPEED_SKIP_MS;

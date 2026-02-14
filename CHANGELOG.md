@@ -2,6 +2,15 @@
 
 Tüm önemli değişiklikler bu dosyada tutulur.
 
+## [0.0.2.1]
+
+### Changed
+- Speed detector mesafe hesabı karekök yerine squared distance ile optimize edildi (`LG_SPEED_LIMIT_SQ`, `LG_SPEED_ABSURD_DISTANCE_SQ`).
+- Speed timer intervali konfigürasyona taşındı (`LG_SPEED_TICK_MS`).
+- Log fonksiyonunda log-level gate formatlama öncesine alındı (`LG_LOG_LEVEL_DEFAULT=LG_LOG_WARN`).
+- Score artış log spamı default kapatıldı (`LG_DEBUG_SCORE_LOG=0`).
+- Speed tick döngüsünde erken çıkış sırası yeniden düzenlendi (connected/ready/skip/vehicle/interior).
+
 ## [0.0.2]
 
 ### Added

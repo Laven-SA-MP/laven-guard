@@ -3,13 +3,13 @@
 #endif
 #define _laven_guard_included
 
-// Laven Guard v0.0.2
+// Laven Guard v0.0.2.1
 // SAMP 0.3.7 Pawn uyumlu
 // Not: Manual integration required.
 
 #include <a_samp>
 
-#define LG_VERSION "0.0.2"
+#define LG_VERSION "0.0.2.1"
 
 // --------------------------------------------------
 // Konfigürasyon
@@ -35,12 +35,24 @@
     #define LG_SPEED_CHECK_ENABLED 1
 #endif
 
+#if !defined LG_SPEED_TICK_MS
+    #define LG_SPEED_TICK_MS 1000
+#endif
+
 #if !defined LG_SPEED_CHECK_INTERVAL_MS
-    #define LG_SPEED_CHECK_INTERVAL_MS 1000
+    #define LG_SPEED_CHECK_INTERVAL_MS LG_SPEED_TICK_MS
+#endif
+
+#if !defined LG_SPEED_LIMIT
+    #define LG_SPEED_LIMIT 50.0
+#endif
+
+#if !defined LG_SPEED_LIMIT_SQ
+    #define LG_SPEED_LIMIT_SQ (LG_SPEED_LIMIT * LG_SPEED_LIMIT)
 #endif
 
 #if !defined LG_SPEED_DISTANCE_LIMIT
-    #define LG_SPEED_DISTANCE_LIMIT 120.0
+    #define LG_SPEED_DISTANCE_LIMIT LG_SPEED_LIMIT
 #endif
 
 #if !defined LG_SPEED_SCORE_AMOUNT
@@ -49,6 +61,10 @@
 
 #if !defined LG_SPEED_ABSURD_DISTANCE
     #define LG_SPEED_ABSURD_DISTANCE 500.0
+#endif
+
+#if !defined LG_SPEED_ABSURD_DISTANCE_SQ
+    #define LG_SPEED_ABSURD_DISTANCE_SQ (LG_SPEED_ABSURD_DISTANCE * LG_SPEED_ABSURD_DISTANCE)
 #endif
 
 #if !defined LG_SPEED_ABSURD_WARN_THROTTLE_MS
@@ -134,6 +150,10 @@
     #define LG_SCORE_LOG_ENABLED 1
 #endif
 
+#if !defined LG_DEBUG_SCORE_LOG
+    #define LG_DEBUG_SCORE_LOG 0
+#endif
+
 #if !defined LG_SCORE_LOG_THROTTLE_MS
     #define LG_SCORE_LOG_THROTTLE_MS 1000
 #endif
@@ -148,6 +168,10 @@ enum E_LG_LOG_LEVEL
     LG_LOG_WARN,
     LG_LOG_ERROR
 }
+
+#if !defined LG_LOG_LEVEL_DEFAULT
+    #define LG_LOG_LEVEL_DEFAULT LG_LOG_WARN
+#endif
 
 enum E_LG_SCORE_CATEGORY
 {
