@@ -48,6 +48,12 @@ public OnPlayerText(playerid, text[])
     }
     return 1;
 }
+
+public OnGameModeExit()
+{
+    LG_Shutdown();
+    return 1;
+}
 ```
 
 ## ⚙️ Konfigürasyon Mantığı

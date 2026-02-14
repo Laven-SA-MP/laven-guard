@@ -64,6 +64,27 @@ stock LG_CoreInit()
     return 1;
 }
 
+stock LG_CoreShutdown()
+{
+    if (LG_DecayTimerId != -1)
+    {
+        KillTimer(LG_DecayTimerId);
+        LG_DecayTimerId = -1;
+    }
+
+    #if LG_SPEED_CHECK_ENABLED
+        if (LG_SpeedTimerId != -1)
+        {
+            KillTimer(LG_SpeedTimerId);
+            LG_SpeedTimerId = -1;
+        }
+    #endif
+
+    LG_CoreStarted = false;
+    LG_Log(LG_LOG_INFO, "Core shutdown tamamlandi.");
+    return 1;
+}
+
 stock LG_CoreOnPlayerConnect(playerid)
 {
     LG_CoreResetPlayer(playerid);

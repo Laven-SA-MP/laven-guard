@@ -200,6 +200,11 @@ stock LG_Init()
     return LG_CoreInit();
 }
 
+stock LG_Shutdown()
+{
+    return LG_CoreShutdown();
+}
+
 stock LG_OnPlayerConnect(playerid)
 {
     return LG_CoreOnPlayerConnect(playerid);

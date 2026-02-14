@@ -38,6 +38,12 @@ public OnPlayerText(playerid, text[])
     return 1;
 }
 
+public OnGameModeExit()
+{
+    LG_Shutdown();
+    return 1;
+}
+
 public OnPlayerDisconnect(playerid, reason)
 {
     LG_OnPlayerDisconnect(playerid);
@@ -46,6 +52,7 @@ public OnPlayerDisconnect(playerid, reason)
 ```
 
 > Not: `LG_Init()` çağrısı core timerları başlatır (score decay + speed tick).
+> Opsiyonel: `OnGameModeExit` içinde `LG_Shutdown()` çağırarak timerları temiz kapatabilirsiniz.
 
 ## 3) Policy ve Score Mantığı
 
