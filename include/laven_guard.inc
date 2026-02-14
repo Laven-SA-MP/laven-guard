@@ -3,13 +3,13 @@
 #endif
 #define _laven_guard_included
 
-// Laven Guard v0.0.3
+// Laven Guard v0.0.4
 // SAMP 0.3.7 Pawn uyumlu
 // Not: Manual integration required.
 
 #include <a_samp>
 
-#define LG_VERSION "0.0.3"
+#define LG_VERSION "0.0.4"
 
 // --------------------------------------------------
 // Konfigürasyon
@@ -73,6 +73,78 @@
 
 #if !defined LG_SPEED_SKIP_MS
     #define LG_SPEED_SKIP_MS 5000
+#endif
+
+#if !defined LG_MOVEMENT_ENABLE
+    #define LG_MOVEMENT_ENABLE 1
+#endif
+
+#if !defined LG_MOVEMENT_TICK_EVERY_N_TICKS
+    #define LG_MOVEMENT_TICK_EVERY_N_TICKS 2
+#endif
+
+#if !defined LG_MOVEMENT_WINDOW
+    #define LG_MOVEMENT_WINDOW 5
+#endif
+
+#if !defined LG_MOVEMENT_CHECK_IN_VEHICLE
+    #define LG_MOVEMENT_CHECK_IN_VEHICLE 0
+#endif
+
+#if !defined LG_MOVEMENT_SKIP_AFTER_TELEPORT_MS
+    #define LG_MOVEMENT_SKIP_AFTER_TELEPORT_MS 5000
+#endif
+
+#if !defined LG_MOVEMENT_GRACE_MS
+    #define LG_MOVEMENT_GRACE_MS 8000
+#endif
+
+#if !defined LG_MOVEMENT_ONFOOT_SPEED_LIMIT
+    #define LG_MOVEMENT_ONFOOT_SPEED_LIMIT 50.0
+#endif
+
+#if !defined LG_MOVEMENT_ONFOOT_SPEED_LIMIT_SQ
+    #define LG_MOVEMENT_ONFOOT_SPEED_LIMIT_SQ (LG_MOVEMENT_ONFOOT_SPEED_LIMIT * LG_MOVEMENT_ONFOOT_SPEED_LIMIT)
+#endif
+
+#if !defined LG_MOVEMENT_Z_SPIKE
+    #define LG_MOVEMENT_Z_SPIKE 6.0
+#endif
+
+#if !defined LG_MOVEMENT_Z_SPIKE_COUNT
+    #define LG_MOVEMENT_Z_SPIKE_COUNT 2
+#endif
+
+#if !defined LG_MOVEMENT_HOVER_DZ_EPS
+    #define LG_MOVEMENT_HOVER_DZ_EPS 0.15
+#endif
+
+#if !defined LG_MOVEMENT_HOVER_MIN_HSPEED
+    #define LG_MOVEMENT_HOVER_MIN_HSPEED 8.0
+#endif
+
+#if !defined LG_MOVEMENT_HOVER_MIN_HSPEED_SQ
+    #define LG_MOVEMENT_HOVER_MIN_HSPEED_SQ (LG_MOVEMENT_HOVER_MIN_HSPEED * LG_MOVEMENT_HOVER_MIN_HSPEED)
+#endif
+
+#if !defined LG_MOVEMENT_HOVER_COUNT
+    #define LG_MOVEMENT_HOVER_COUNT 3
+#endif
+
+#if !defined LG_MOVEMENT_ABSURD_DISTANCE
+    #define LG_MOVEMENT_ABSURD_DISTANCE 500.0
+#endif
+
+#if !defined LG_MOVEMENT_ABSURD_DISTANCE_SQ
+    #define LG_MOVEMENT_ABSURD_DISTANCE_SQ (LG_MOVEMENT_ABSURD_DISTANCE * LG_MOVEMENT_ABSURD_DISTANCE)
+#endif
+
+#if !defined LG_MOVEMENT_ABSURD_WARN_THROTTLE_MS
+    #define LG_MOVEMENT_ABSURD_WARN_THROTTLE_MS 60000
+#endif
+
+#if !defined LG_MOVEMENT_SCORE_AMOUNT
+    #define LG_MOVEMENT_SCORE_AMOUNT 3
 #endif
 
 #if !defined LG_SANITY_ENABLE
@@ -170,6 +242,10 @@
     #define LG_SOFT_ACTION_SANITY LG_SOFT_ACTION_WARN
 #endif
 
+#if !defined LG_SOFT_ACTION_MOVEMENT
+    #define LG_SOFT_ACTION_MOVEMENT LG_SOFT_ACTION_WARN
+#endif
+
 #if !defined LG_FLOOD_THRESHOLD_SOFT
     #define LG_FLOOD_THRESHOLD_SOFT 20
 #endif
@@ -218,6 +294,18 @@
     #define LG_SANITY_THRESHOLD_BAN 120
 #endif
 
+#if !defined LG_MOVEMENT_THRESHOLD_SOFT
+    #define LG_MOVEMENT_THRESHOLD_SOFT 25
+#endif
+
+#if !defined LG_MOVEMENT_THRESHOLD_KICK
+    #define LG_MOVEMENT_THRESHOLD_KICK 70
+#endif
+
+#if !defined LG_MOVEMENT_THRESHOLD_BAN
+    #define LG_MOVEMENT_THRESHOLD_BAN 120
+#endif
+
 #if !defined LG_DECAY_INTERVAL_SECONDS
     #define LG_DECAY_INTERVAL_SECONDS 60
 #endif
@@ -236,6 +324,10 @@
 
 #if !defined LG_DECAY_AMOUNT_SANITY
     #define LG_DECAY_AMOUNT_SANITY 5
+#endif
+
+#if !defined LG_DECAY_AMOUNT_MOVEMENT
+    #define LG_DECAY_AMOUNT_MOVEMENT 5
 #endif
 
 #if !defined LG_SCORE_LOG_ENABLED
@@ -275,6 +367,7 @@ enum E_LG_SCORE_CATEGORY
     LG_SCORE_SPEED,
     LG_SCORE_WEAPON,
     LG_SCORE_SANITY,
+    LG_SCORE_MOVEMENT,
     LG_SCORE_TOTAL,
     LG_SCORE_CATEGORY_COUNT
 }
@@ -315,6 +408,24 @@ new LG_LastAnimIndex[MAX_PLAYERS];
 new bool:LG_LastAnimReady[MAX_PLAYERS];
 new LG_SanitySkipUntil[MAX_PLAYERS];
 
+new LG_MovementSkipUntil[MAX_PLAYERS];
+new LG_MovementGraceUntil[MAX_PLAYERS];
+new LG_MovementAbsurdWarnAt[MAX_PLAYERS];
+new LG_MoveIdx[MAX_PLAYERS];
+new LG_MoveCount[MAX_PLAYERS];
+new bool:LG_MoveReady[MAX_PLAYERS];
+new LG_MoveLastInterior[MAX_PLAYERS];
+new LG_MoveLastVW[MAX_PLAYERS];
+new Float:LG_MoveX[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+new Float:LG_MoveY[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+new Float:LG_MoveZ[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+new LG_MoveTS[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+new bool:LG_MoveOnFoot[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+new LG_MoveInterior[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+new LG_MoveVW[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+new bool:LG_MoveGrounded[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+new Float:LG_MoveSpeedSq[MAX_PLAYERS][LG_MOVEMENT_WINDOW];
+
 new LG_DecayTimerId = -1;
 new LG_SpeedTimerId = -1;
 new bool:LG_CoreStarted = false;
@@ -325,6 +436,7 @@ new LG_CoreTickCount = 0;
 #include <lg_policy>
 #include <lg_detectors/lg_flood>
 #include <lg_detectors/lg_speed>
+#include <lg_detectors/lg_movement>
 #include <lg_detectors/lg_sanity_health>
 #include <lg_detectors/lg_sanity_armor>
 #include <lg_detectors/lg_sanity_weapon>

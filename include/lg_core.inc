@@ -60,6 +60,28 @@ stock LG_CoreResetPlayer(playerid)
     LG_LastAnimIndex[playerid] = 0;
     LG_LastAnimReady[playerid] = false;
     LG_SanitySkipUntil[playerid] = GetTickCount() + LG_SANITY_GRACE_MS;
+
+    LG_MovementSkipUntil[playerid] = GetTickCount() + LG_MOVEMENT_SKIP_AFTER_TELEPORT_MS;
+    LG_MovementGraceUntil[playerid] = GetTickCount() + LG_MOVEMENT_GRACE_MS;
+    LG_MovementAbsurdWarnAt[playerid] = 0;
+    LG_MoveIdx[playerid] = 0;
+    LG_MoveCount[playerid] = 0;
+    LG_MoveReady[playerid] = false;
+    LG_MoveLastInterior[playerid] = -1;
+    LG_MoveLastVW[playerid] = -1;
+
+    for (new slot = 0; slot < LG_MOVEMENT_WINDOW; slot++)
+    {
+        LG_MoveX[playerid][slot] = 0.0;
+        LG_MoveY[playerid][slot] = 0.0;
+        LG_MoveZ[playerid][slot] = 0.0;
+        LG_MoveTS[playerid][slot] = 0;
+        LG_MoveOnFoot[playerid][slot] = false;
+        LG_MoveInterior[playerid][slot] = 0;
+        LG_MoveVW[playerid][slot] = 0;
+        LG_MoveGrounded[playerid][slot] = false;
+        LG_MoveSpeedSq[playerid][slot] = 0.0;
+    }
     return 1;
 }
 
@@ -108,6 +130,7 @@ stock LG_CoreOnPlayerConnect(playerid)
 {
     LG_CoreResetPlayer(playerid);
     LG_DetectorSpeedInitPlayer(playerid);
+    LG_DetectorMovementResetPlayer(playerid);
     return 1;
 }
 
@@ -137,9 +160,17 @@ public LG_Core_TickSpeed()
     #if LG_SPEED_CHECK_ENABLED
         LG_DetectorSpeedTick();
 
-        #if LG_SANITY_ENABLE
-            LG_CoreTickCount++;
+        LG_CoreTickCount++;
 
+        #if LG_MOVEMENT_ENABLE
+            new movementTickEvery = LG_MOVEMENT_TICK_EVERY_N_TICKS;
+            if (movementTickEvery <= 1 || (LG_CoreTickCount % movementTickEvery) == 0)
+            {
+                LG_DetectorMovementTick();
+            }
+        #endif
+
+        #if LG_SANITY_ENABLE
             // 0 veya negatif deger verilirse guvenli sekilde her tick calisir.
             new sanityTickEvery = LG_SANITY_TICK_EVERY_N_TICKS;
             if (sanityTickEvery <= 1 || (LG_CoreTickCount % sanityTickEvery) == 0)

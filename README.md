@@ -21,6 +21,7 @@ Detector modülleri ceza basmaz; yalnızca event ve score üretir. Policy engine
 - `include/lg_policy.inc` → eşik/policy/aksiyon
 - `include/lg_detectors/lg_flood.inc` → chat flood detector
 - `include/lg_detectors/lg_speed.inc` → speed anomaly detector
+- `include/lg_detectors/lg_movement.inc` → movement anomaly detector (window pattern)
 - `include/lg_detectors/lg_sanity.inc` → sanity ortak tick girişi
 - `include/lg_detectors/lg_sanity_health.inc` → health doğrulama
 - `include/lg_detectors/lg_sanity_armor.inc` → armor doğrulama
@@ -85,14 +86,15 @@ Framework `#define` ile yönetilir:
 - Flood score
 - Speed score
 - Weapon score (placeholder)
+- Movement score
 - Total score
 
-## 📌 v0.0.3 Notları
+## 📌 v0.0.4 Notları
 
-- Sanity kontrol katmanı eklendi (health, armor, weapon, skin, anim).
-- Core speed tick içinde tek döngü mantığı ile sanity tick çalıştırıldı (ek timer yok).
-- Speed detector teleport/interior benzeri durumlarda sanity grace/skip tetiklemeye başladı.
-- Yeni `LG_SCORE_SANITY` kategorisi ve policy eşikleri eklendi (default soft warn).
+- Movement anomaly katmanı eklendi (`LG_SCORE_MOVEMENT`) ve decay/total hesaplarına dahil edildi.
+- 5 snapshot pencere + 2 tickte 1 sampling ile sustained speed, z-spike ve hover pattern analizi eklendi.
+- Interior/VW değişimi, speed cooldown, absurd delta ve connect grace koşullarında RP-safe skip akışı eklendi.
+- Core speed tick içinde movement + sanity akışı korunarak yeni timer açılmadı.
 
 ## 🧭 Destek
 

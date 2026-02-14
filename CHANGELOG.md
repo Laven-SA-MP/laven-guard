@@ -2,6 +2,21 @@
 
 Tüm önemli değişiklikler bu dosyada tutulur.
 
+## [0.0.4]
+
+### Added
+- Yeni movement detector modülü eklendi: `include/lg_detectors/lg_movement.inc`.
+- Yeni score kategorisi `LG_SCORE_MOVEMENT` eklendi.
+- Movement pattern analizi eklendi: sustained speed, z spike ve hover.
+- Movement ring buffer altyapısı eklendi (`LG_MOVEMENT_WINDOW=5`).
+- Movement teleport/absurd delta için RP-safe skip + throttled warn log eklendi.
+
+### Changed
+- `LG_VERSION` değeri `0.0.4` olarak güncellendi.
+- Core speed tick akışına movement sampling entegre edildi (ek timer açılmadı).
+- Policy ve decay mimarisi movement kategorisini kapsayacak şekilde genişletildi.
+- README, kurulum dokümanı ve roadmap v0.0.4 kapsamına göre güncellendi.
+
 ## [0.0.3]
 
 ### Added
