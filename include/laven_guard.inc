@@ -130,6 +130,14 @@
     #define LG_DECAY_AMOUNT_WEAPON 0
 #endif
 
+#if !defined LG_SCORE_LOG_ENABLED
+    #define LG_SCORE_LOG_ENABLED 1
+#endif
+
+#if !defined LG_SCORE_LOG_THROTTLE_MS
+    #define LG_SCORE_LOG_THROTTLE_MS 1000
+#endif
+
 // --------------------------------------------------
 // Enum ve global state
 // --------------------------------------------------
@@ -163,6 +171,7 @@ new LG_ChatWindowStart[MAX_PLAYERS];
 new LG_ChatMuteUntil[MAX_PLAYERS];
 
 new LG_Score[MAX_PLAYERS][LG_SCORE_CATEGORY_COUNT];
+new LG_LastScoreLogAt[MAX_PLAYERS][LG_SCORE_CATEGORY_COUNT];
 
 new Float:LG_LastPosX[MAX_PLAYERS];
 new Float:LG_LastPosY[MAX_PLAYERS];

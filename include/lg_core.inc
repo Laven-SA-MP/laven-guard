@@ -32,6 +32,7 @@ stock LG_CoreResetPlayer(playerid)
     for (new category = 0; category < LG_SCORE_CATEGORY_COUNT; category++)
     {
         LG_Score[playerid][category] = 0;
+        LG_LastScoreLogAt[playerid][category] = 0;
     }
 
     LG_LastPosX[playerid] = 0.0;
