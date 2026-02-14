@@ -90,6 +90,11 @@ Detector:
 - `LG_SPEED_ABSURD_DISTANCE`
 - `LG_SPEED_SKIP_MS`
 
+Score loglama:
+
+- `LG_SCORE_LOG_ENABLED` (`1`: aktif, `0`: tamamen sessiz)
+- `LG_SCORE_LOG_THROTTLE_MS` (aynı oyuncu + kategori logları için minimum bekleme süresi)
+
 Soft aksiyon override:
 
 - `LG_SOFT_ACTION_FLOOD` (default: mute)
