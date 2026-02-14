@@ -27,3 +27,9 @@ public OnPlayerText(playerid, text[])
     }
     return 1;
 }
+
+public OnPlayerDisconnect(playerid, reason)
+{
+    LG_OnPlayerDisconnect(playerid);
+    return 1;
+}

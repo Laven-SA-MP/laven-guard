@@ -37,6 +37,12 @@ public OnPlayerText(playerid, text[])
     }
     return 1;
 }
+
+public OnPlayerDisconnect(playerid, reason)
+{
+    LG_OnPlayerDisconnect(playerid);
+    return 1;
+}
 ```
 
 > Not: `LG_Init()` çağrısı core timerları başlatır (score decay + speed tick).
@@ -81,7 +87,14 @@ Detector:
 - `LG_CHAT_FLOOD_LIMIT`
 - `LG_CHAT_WINDOW_MS`
 - `LG_SPEED_DISTANCE_LIMIT`
+- `LG_SPEED_ABSURD_DISTANCE`
 - `LG_SPEED_SKIP_MS`
+
+Soft aksiyon override:
+
+- `LG_SOFT_ACTION_FLOOD` (default: mute)
+- `LG_SOFT_ACTION_SPEED` (default: warn)
+- `LG_SOFT_ACTION_WEAPON` (default: warn)
 
 ## 5) Opsiyonel Auto Hook (İleri Aşama)
 

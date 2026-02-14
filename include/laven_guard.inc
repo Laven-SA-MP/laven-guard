@@ -47,12 +47,35 @@
     #define LG_SPEED_SCORE_AMOUNT 20
 #endif
 
+#if !defined LG_SPEED_ABSURD_DISTANCE
+    #define LG_SPEED_ABSURD_DISTANCE 500.0
+#endif
+
+#if !defined LG_SPEED_ABSURD_WARN_THROTTLE_MS
+    #define LG_SPEED_ABSURD_WARN_THROTTLE_MS 5000
+#endif
+
 #if !defined LG_SPEED_SKIP_MS
     #define LG_SPEED_SKIP_MS 5000
 #endif
 
 #if !defined LG_SOFT_MUTE_MS
     #define LG_SOFT_MUTE_MS 5000
+#endif
+
+#define LG_SOFT_ACTION_MUTE 1
+#define LG_SOFT_ACTION_WARN 2
+
+#if !defined LG_SOFT_ACTION_FLOOD
+    #define LG_SOFT_ACTION_FLOOD LG_SOFT_ACTION_MUTE
+#endif
+
+#if !defined LG_SOFT_ACTION_SPEED
+    #define LG_SOFT_ACTION_SPEED LG_SOFT_ACTION_WARN
+#endif
+
+#if !defined LG_SOFT_ACTION_WEAPON
+    #define LG_SOFT_ACTION_WEAPON LG_SOFT_ACTION_WARN
 #endif
 
 #if !defined LG_FLOOD_THRESHOLD_SOFT
@@ -147,6 +170,7 @@ new Float:LG_LastPosZ[MAX_PLAYERS];
 new LG_LastInterior[MAX_PLAYERS];
 new LG_SpeedSkipUntil[MAX_PLAYERS];
 new bool:LG_SpeedReady[MAX_PLAYERS];
+new LG_SpeedAbsurdWarnAt[MAX_PLAYERS];
 
 new LG_DecayTimerId = -1;
 new LG_SpeedTimerId = -1;
@@ -175,4 +199,9 @@ stock LG_OnPlayerConnect(playerid)
 stock LG_OnPlayerText(playerid, const text[])
 {
     return LG_DetectorFloodOnText(playerid, text);
+}
+
+stock LG_OnPlayerDisconnect(playerid)
+{
+    return LG_CoreOnPlayerDisconnect(playerid);
 }

@@ -40,6 +40,7 @@ stock LG_CoreResetPlayer(playerid)
     LG_LastInterior[playerid] = 0;
     LG_SpeedSkipUntil[playerid] = GetTickCount() + LG_SPEED_SKIP_MS;
     LG_SpeedReady[playerid] = false;
+    LG_SpeedAbsurdWarnAt[playerid] = 0;
     return 1;
 }
 
@@ -66,6 +67,13 @@ stock LG_CoreOnPlayerConnect(playerid)
 {
     LG_CoreResetPlayer(playerid);
     LG_DetectorSpeedInitPlayer(playerid);
+    return 1;
+}
+
+stock LG_CoreOnPlayerDisconnect(playerid)
+{
+    // Disconnect aninda tum state temizlenir.
+    LG_CoreResetPlayer(playerid);
     return 1;
 }
 
