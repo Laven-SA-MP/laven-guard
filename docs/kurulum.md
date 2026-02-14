@@ -1,6 +1,6 @@
 # Kurulum
 
-Bu doküman Laven Guard v0.0.4 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
+Bu doküman Laven Guard v0.0.5 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
 
 ## 1) Dosya Yapısı
 
@@ -123,3 +123,41 @@ Yeni kategoriler:
 - Hover ve z-spike hesapları minimum snapshot ile yapılır, `sqrt` kullanılmaz.
 - Teleport/interior/VW benzeri sıçramalarda movement kontrolü skip + reset alır.
 - Debug score log default kapalıdır (`LG_DEBUG_SCORE_LOG=0`).
+
+
+## 6) Hook ve Runtime Kontrol Katmanı (v0.0.5)
+
+Public API, geriye uyumlu kalacak şekilde opsiyonel hook desteği sunar:
+
+- `LG_OnDetection(playerid, category, amount, newScore, reason[])`
+- `LG_OnPenaltyApply(playerid, category, &penalty)`
+- `LG_OnPenaltyApplied(playerid, category, penalty)`
+
+`LG_OnPenaltyApply` içinde ceza by-ref güncellenebilir. `LG_PENALTY_NONE` verilirse ceza uygulanmaz.
+
+Örnek override:
+
+```pawn
+public LG_OnPenaltyApply(playerid, category, &penalty)
+{
+    if (category == LG_SCORE_MOVEMENT)
+    {
+        penalty = LG_PENALTY_SOFT;
+    }
+    return 1;
+}
+```
+
+Runtime kontrol API:
+
+- `LG_SetCategoryEnabled(category, bool:enabled)`
+- `LG_SetDebugMode(bool:enabled)`
+- `LG_IsDebugMode()`
+
+Kategori defaultları config define üzerinden başlatılır:
+
+- `LG_ENABLE_SPEED`
+- `LG_ENABLE_SANITY`
+- `LG_ENABLE_MOVEMENT`
+- `LG_DEBUG_DEFAULT`
+

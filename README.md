@@ -19,6 +19,7 @@ Detector modülleri ceza basmaz; yalnızca event ve score üretir. Policy engine
 - `include/lg_core.inc` → init, timer, state yönetimi
 - `include/lg_score.inc` → score add/get/decay
 - `include/lg_policy.inc` → eşik/policy/aksiyon
+- `include/laven_guard.inc` (observability/control layer) → hook forward + runtime toggle API
 - `include/lg_detectors/lg_flood.inc` → chat flood detector
 - `include/lg_detectors/lg_speed.inc` → speed anomaly detector
 - `include/lg_detectors/lg_movement.inc` → movement anomaly detector (window pattern)
@@ -88,6 +89,15 @@ Framework `#define` ile yönetilir:
 - Weapon score (placeholder)
 - Movement score
 - Total score
+
+## 📌 v0.0.5 Notları
+
+- Observability hook katmanı eklendi: `LG_OnDetection`, `LG_OnPenaltyApply`, `LG_OnPenaltyApplied`.
+- Penalty apply öncesi override desteği eklendi; `LG_PENALTY_NONE` ile ceza iptal edilebilir.
+- Category bazlı runtime enable/disable API eklendi: `LG_SetCategoryEnabled`.
+- Debug runtime kontrolü eklendi: `LG_SetDebugMode`, `LG_IsDebugMode`, `LG_DEBUG_DEFAULT`.
+- Speed/Sanity/Movement category default kontrol define'ları eklendi: `LG_ENABLE_SPEED`, `LG_ENABLE_SANITY`, `LG_ENABLE_MOVEMENT`.
+- Yeni timer eklenmeden mevcut policy mimarisi korunarak entegrasyon tamamlandı.
 
 ## 📌 v0.0.4 Notları
 

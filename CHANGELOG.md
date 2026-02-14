@@ -2,6 +2,21 @@
 
 Tüm önemli değişiklikler bu dosyada tutulur.
 
+## [0.0.5]
+
+### Added
+- Observability hook forward'ları eklendi: `LG_OnDetection`, `LG_OnPenaltyApply`, `LG_OnPenaltyApplied`.
+- Category bazlı runtime kontrol API'si eklendi: `LG_SetCategoryEnabled`.
+- Debug runtime kontrol API'si eklendi: `LG_SetDebugMode`, `LG_IsDebugMode`.
+
+### Changed
+- `LG_VERSION` değeri `0.0.5` olarak güncellendi.
+- Policy akışına ceza uygulama öncesi hook entegre edildi; hook içinde penalty by-ref değiştirilebilir hale geldi.
+- `LG_PENALTY_NONE` override durumunda ceza uygulanmama davranışı eklendi.
+- Detection raise akışına category enable/disable kontrolü ve detection event hook çağrısı eklendi.
+- `LG_Log` davranışı debug moduna bağlandı: debug kapalıyken INFO loglar susar, WARN/ERROR her zaman basılır.
+- Yeni timer eklenmeden observability/control katmanı mevcut mimariye entegre edildi.
+
 ## [0.0.4]
 
 ### Added

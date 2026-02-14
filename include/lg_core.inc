@@ -8,9 +8,12 @@ forward LG_Core_TickSpeed();
 
 stock LG_Log(E_LG_LOG_LEVEL:level, const message[])
 {
-    if (level < LG_LOG_LEVEL_DEFAULT)
+    if (level == LG_LOG_INFO)
     {
-        return 1;
+        if (!LG_DebugMode || level < LG_LOG_LEVEL_DEFAULT)
+        {
+            return 1;
+        }
     }
 
     new levelText[8];
@@ -83,6 +86,15 @@ stock LG_CoreResetPlayer(playerid)
 
 stock LG_CoreInit()
 {
+    // Runtime kontrol state'i her init cagrisi oncesi config defaultlarina cekilir.
+    LG_DebugMode = (LG_DEBUG_DEFAULT != 0);
+    LG_CategoryEnabled[LG_SCORE_FLOOD] = true;
+    LG_CategoryEnabled[LG_SCORE_SPEED] = (LG_ENABLE_SPEED != 0);
+    LG_CategoryEnabled[LG_SCORE_WEAPON] = true;
+    LG_CategoryEnabled[LG_SCORE_SANITY] = (LG_ENABLE_SANITY != 0);
+    LG_CategoryEnabled[LG_SCORE_MOVEMENT] = (LG_ENABLE_MOVEMENT != 0);
+    LG_CategoryEnabled[LG_SCORE_TOTAL] = true;
+
     if (LG_CoreStarted)
     {
         LG_Log(LG_LOG_WARN, "Init tekrar cagrildi, mevcut timerlar korunuyor.");
