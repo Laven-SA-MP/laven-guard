@@ -15,6 +15,24 @@ stock LG_PolicyGetSoftAction(E_LG_SCORE_CATEGORY:category)
     return LG_SOFT_ACTION_WARN;
 }
 
+
+stock bool:LG_PolicyCanLog(playerid, E_LG_SCORE_CATEGORY:category, now)
+{
+    if (LG_POLICY_LOG_THROTTLE_MS <= 0)
+    {
+        return true;
+    }
+
+    new lastLog = LG_LastPolicyLogAt[playerid][category];
+    if (lastLog == 0 || now < lastLog || (now - lastLog) >= LG_POLICY_LOG_THROTTLE_MS)
+    {
+        LG_LastPolicyLogAt[playerid][category] = now;
+        return true;
+    }
+
+    return false;
+}
+
 stock LG_PolicyApply(playerid, E_LG_SCORE_CATEGORY:category, E_LG_PENALTY_TYPE:penalty, const reason[])
 {
     if (!IsPlayerConnected(playerid) || penalty == LG_PENALTY_NONE)
@@ -40,20 +58,29 @@ stock LG_PolicyApply(playerid, E_LG_SCORE_CATEGORY:category, E_LG_PENALTY_TYPE:p
                 format(logMessage, sizeof(logMessage), "SOFT p:%d c:%d uyari kaydi (%s)", playerid, _:category, reason);
             }
 
-            LG_Log(LG_LOG_WARN, logMessage);
+            if (LG_PolicyCanLog(playerid, category, GetTickCount()))
+            {
+                LG_Log(LG_LOG_WARN, logMessage);
+            }
             return 1;
         }
         case LG_PENALTY_KICK:
         {
             format(logMessage, sizeof(logMessage), "KICK p:%d c:%d (%s)", playerid, _:category, reason);
-            LG_Log(LG_LOG_WARN, logMessage);
+            if (LG_PolicyCanLog(playerid, category, GetTickCount()))
+            {
+                LG_Log(LG_LOG_WARN, logMessage);
+            }
             Kick(playerid);
             return 1;
         }
         case LG_PENALTY_BAN:
         {
             format(logMessage, sizeof(logMessage), "BAN p:%d c:%d (%s)", playerid, _:category, reason);
-            LG_Log(LG_LOG_ERROR, logMessage);
+            if (LG_PolicyCanLog(playerid, category, GetTickCount()))
+            {
+                LG_Log(LG_LOG_ERROR, logMessage);
+            }
             Ban(playerid);
             return 1;
         }
@@ -121,7 +148,7 @@ stock E_LG_PENALTY_TYPE:LG_PolicyEvaluate(playerid, E_LG_SCORE_CATEGORY:category
     new score = LG_ScoreGet(playerid, category);
     new E_LG_PENALTY_TYPE:penalty = LG_PolicyResolve(category, score);
 
-    if (penalty != LG_PENALTY_NONE)
+    if (penalty != LG_PENALTY_NONE && LG_PolicyCanLog(playerid, category, GetTickCount()))
     {
         new logMessage[144];
         format(logMessage, sizeof(logMessage), "Threshold tetiklendi p:%d c:%d score:%d (%s)", playerid, _:category, score, reason);

@@ -80,7 +80,11 @@
 #endif
 
 #if !defined LG_SANITY_TICK_EVERY_N_TICKS
-    #define LG_SANITY_TICK_EVERY_N_TICKS 1
+    #define LG_SANITY_TICK_EVERY_N_TICKS 2
+#endif
+
+#if !defined LG_SANITY_ANIM_ENABLE
+    #define LG_SANITY_ANIM_ENABLE 0
 #endif
 
 #if !defined LG_SANITY_GRACE_MS
@@ -246,6 +250,10 @@
     #define LG_SCORE_LOG_THROTTLE_MS 1000
 #endif
 
+#if !defined LG_POLICY_LOG_THROTTLE_MS
+    #define LG_POLICY_LOG_THROTTLE_MS 1000
+#endif
+
 // --------------------------------------------------
 // Enum ve global state
 // --------------------------------------------------
@@ -285,6 +293,7 @@ new LG_ChatMuteUntil[MAX_PLAYERS];
 
 new LG_Score[MAX_PLAYERS][LG_SCORE_CATEGORY_COUNT];
 new LG_LastScoreLogAt[MAX_PLAYERS][LG_SCORE_CATEGORY_COUNT];
+new LG_LastPolicyLogAt[MAX_PLAYERS][LG_SCORE_CATEGORY_COUNT];
 
 new Float:LG_LastPosX[MAX_PLAYERS];
 new Float:LG_LastPosY[MAX_PLAYERS];
@@ -295,9 +304,9 @@ new bool:LG_SpeedReady[MAX_PLAYERS];
 new LG_SpeedAbsurdWarnAt[MAX_PLAYERS];
 
 new Float:LG_LastHealth[MAX_PLAYERS];
-new bool:LG_LastHealthReady[MAX_PLAYERS];
+new bool:LG_HealthReady[MAX_PLAYERS];
 new Float:LG_LastArmor[MAX_PLAYERS];
-new bool:LG_LastArmorReady[MAX_PLAYERS];
+new bool:LG_ArmorReady[MAX_PLAYERS];
 new LG_LastWeapon[MAX_PLAYERS];
 new bool:LG_LastWeaponReady[MAX_PLAYERS];
 new LG_LastSkin[MAX_PLAYERS];
@@ -309,7 +318,7 @@ new LG_SanitySkipUntil[MAX_PLAYERS];
 new LG_DecayTimerId = -1;
 new LG_SpeedTimerId = -1;
 new bool:LG_CoreStarted = false;
-new LG_CoreSpeedTickCount = 0;
+new LG_CoreTickCount = 0;
 
 #include <lg_core>
 #include <lg_score>
