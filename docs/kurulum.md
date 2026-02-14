@@ -1,6 +1,6 @@
 # Kurulum
 
-Bu doküman Laven Guard v0.0.3 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
+Bu doküman Laven Guard v0.0.4 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
 
 ## 1) Dosya Yapısı
 
@@ -10,6 +10,7 @@ Bu doküman Laven Guard v0.0.3 için manual entegrasyon, modül yapısı ve poli
 - `include/lg_policy.inc` → eşik ve aksiyon kararları
 - `include/lg_detectors/lg_flood.inc` → chat flood detector
 - `include/lg_detectors/lg_speed.inc` → speed detector
+- `include/lg_detectors/lg_movement.inc` → movement anomaly detector
 - `include/lg_detectors/lg_sanity.inc` → sanity ortak tick akışı
 - `include/lg_detectors/lg_sanity_health.inc` → health doğrulama
 - `include/lg_detectors/lg_sanity_armor.inc` → armor doğrulama
@@ -58,7 +59,7 @@ public OnPlayerDisconnect(playerid, reason)
 ```
 
 > Not: `LG_Init()` çağrısı core timerları başlatır (score decay + speed tick).
-> v0.0.3 ile sanity kontrolleri aynı speed tick içinde çalışır, yeni timer açılmaz.
+> v0.0.4 ile movement ve sanity kontrolleri aynı speed tick içinde çalışır, yeni timer açılmaz.
 
 ## 3) Policy ve Score Mantığı
 
@@ -69,11 +70,37 @@ Akış:
 3. `LG_PolicyEvaluate` eşikleri kontrol eder
 4. Policy aksiyonu uygulanır
 
-Yeni kategori:
+Yeni kategoriler:
 
 - `LG_SCORE_SANITY` (RP-safe default: soft warn)
+- `LG_SCORE_MOVEMENT` (RP-safe default: soft warn)
 
 ## 4) Önemli Config Define'ları
+
+### Movement
+
+- `LG_MOVEMENT_ENABLE` (default `1`)
+- `LG_MOVEMENT_TICK_EVERY_N_TICKS` (default `2`)
+- `LG_MOVEMENT_WINDOW` (default `5`)
+- `LG_MOVEMENT_GRACE_MS` (default `8000`)
+- `LG_MOVEMENT_SKIP_AFTER_TELEPORT_MS` (default `5000`)
+- `LG_MOVEMENT_CHECK_IN_VEHICLE` (default `0`)
+- `LG_MOVEMENT_ONFOOT_SPEED_LIMIT` / `_SQ`
+- `LG_MOVEMENT_Z_SPIKE` / `LG_MOVEMENT_Z_SPIKE_COUNT`
+- `LG_MOVEMENT_HOVER_DZ_EPS`
+- `LG_MOVEMENT_HOVER_MIN_HSPEED` / `_SQ`
+- `LG_MOVEMENT_HOVER_COUNT`
+- `LG_MOVEMENT_ABSURD_DISTANCE` / `_SQ`
+- `LG_MOVEMENT_ABSURD_WARN_THROTTLE_MS`
+- `LG_MOVEMENT_SCORE_AMOUNT` (default `3`)
+
+### Movement Policy
+
+- `LG_MOVEMENT_THRESHOLD_SOFT`
+- `LG_MOVEMENT_THRESHOLD_KICK`
+- `LG_MOVEMENT_THRESHOLD_BAN`
+- `LG_SOFT_ACTION_MOVEMENT` (default `LG_SOFT_ACTION_WARN`)
+- `LG_DECAY_AMOUNT_MOVEMENT`
 
 ### Sanity
 
@@ -84,26 +111,10 @@ Yeni kategori:
 - `LG_SANITY_SCORE_AMOUNT` (default `2`)
 - `LG_SANITY_ANIM_ENABLE` (default `0`)
 
-### Sanity Aralıkları
-
-- `LG_HEALTH_MIN` / `LG_HEALTH_MAX`
-- `LG_ARMOR_MIN` / `LG_ARMOR_MAX`
-- `LG_HEALTH_JUMP_MAX`
-- `LG_ARMOR_JUMP_MAX`
-- `LG_WEAPON_ID_MIN` / `LG_WEAPON_ID_MAX`
-- `LG_SKIN_ID_MIN` / `LG_SKIN_ID_MAX`
-- `LG_ANIM_INDEX_MIN` / `LG_ANIM_INDEX_MAX`
-
-### Policy
-
-- `LG_SANITY_THRESHOLD_SOFT`
-- `LG_SANITY_THRESHOLD_KICK`
-- `LG_SANITY_THRESHOLD_BAN`
-- `LG_SOFT_ACTION_SANITY` (default `LG_SOFT_ACTION_WARN`)
-- `LG_POLICY_LOG_THROTTLE_MS` (default `1000`)
-
 ## 5) Performans Notları
 
-- Tek döngü yaklaşımı korunur: speed tick içinde sanity tick tetiklenir.
-- Teleport/interior benzeri sıçramalarda sanity kontrolü geçici skip alır.
+- Tek döngü yaklaşımı korunur: speed tick içinde movement + sanity tick tetiklenir.
+- Movement detector ring buffer dolmadan analiz yapmaz (window hazır olmadan raise yok).
+- Tüm mesafe karşılaştırmaları squared distance ile yapılır, `sqrt` çağrısı yoktur.
+- Teleport/interior/VW benzeri sıçramalarda movement kontrolü skip + reset alır.
 - Debug score log default kapalıdır (`LG_DEBUG_SCORE_LOG=0`).

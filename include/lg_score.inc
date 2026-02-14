@@ -87,11 +87,18 @@ stock LG_ScoreDecayAll(playerid)
         LG_Score[playerid][LG_SCORE_SANITY] = 0;
     }
 
+    LG_Score[playerid][LG_SCORE_MOVEMENT] -= LG_DECAY_AMOUNT_MOVEMENT;
+    if (LG_Score[playerid][LG_SCORE_MOVEMENT] < 0)
+    {
+        LG_Score[playerid][LG_SCORE_MOVEMENT] = 0;
+    }
+
     LG_Score[playerid][LG_SCORE_TOTAL] =
         LG_Score[playerid][LG_SCORE_FLOOD] +
         LG_Score[playerid][LG_SCORE_SPEED] +
         LG_Score[playerid][LG_SCORE_WEAPON] +
-        LG_Score[playerid][LG_SCORE_SANITY];
+        LG_Score[playerid][LG_SCORE_SANITY] +
+        LG_Score[playerid][LG_SCORE_MOVEMENT];
 
     return 1;
 }

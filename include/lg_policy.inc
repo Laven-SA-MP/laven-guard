@@ -11,6 +11,7 @@ stock LG_PolicyGetSoftAction(E_LG_SCORE_CATEGORY:category)
         case LG_SCORE_SPEED: return LG_SOFT_ACTION_SPEED;
         case LG_SCORE_WEAPON: return LG_SOFT_ACTION_WEAPON;
         case LG_SCORE_SANITY: return LG_SOFT_ACTION_SANITY;
+        case LG_SCORE_MOVEMENT: return LG_SOFT_ACTION_MOVEMENT;
     }
     return LG_SOFT_ACTION_WARN;
 }
@@ -120,6 +121,12 @@ stock E_LG_PENALTY_TYPE:LG_PolicyResolve(E_LG_SCORE_CATEGORY:category, score)
             softThreshold = LG_SANITY_THRESHOLD_SOFT;
             kickThreshold = LG_SANITY_THRESHOLD_KICK;
             banThreshold = LG_SANITY_THRESHOLD_BAN;
+        }
+        case LG_SCORE_MOVEMENT:
+        {
+            softThreshold = LG_MOVEMENT_THRESHOLD_SOFT;
+            kickThreshold = LG_MOVEMENT_THRESHOLD_KICK;
+            banThreshold = LG_MOVEMENT_THRESHOLD_BAN;
         }
         default:
         {

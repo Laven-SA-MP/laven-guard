@@ -10,9 +10,10 @@
 - **Hedef:** RP bütünlüğünü bozan anormal oyuncu durumlarını yakalamak.
 - **Açıklama:** Weapon, skin, anim, health ve armor kontrolleri; speed tick içinde sanity doğrulama; policy entegrasyonu.
 
-## v0.4 — Movement Anomaly (RP Safe)
+## ✅ v0.0.4 — Movement Anomaly (RP Safe)
+- **Durum:** Tamamlandı
 - **Hedef:** RP akışını bozmadan teleport delta ve hareket anomalilerini filtrelemek.
-- **Açıklama:** Yanlış pozitif azaltımı ve gelişmiş eşik profilleri.
+- **Açıklama:** 3-5 tick pattern analizi, movement score/policy/decay entegrasyonu ve RP-safe skip kuralları eklendi.
 
 ## v1.0 — Stable RP Edition
 - **Hedef:** Üretimde sürdürülebilir, dokümantasyonu tamamlanmış stabil sürüm.
