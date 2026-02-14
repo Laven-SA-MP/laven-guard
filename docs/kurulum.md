@@ -90,6 +90,9 @@ Yeni kategoriler:
 - `LG_MOVEMENT_HOVER_DZ_EPS`
 - `LG_MOVEMENT_HOVER_MIN_HSPEED` / `_SQ`
 - `LG_MOVEMENT_HOVER_COUNT`
+- `LG_MOVEMENT_FAST_EPS_DIST_SQ` (default `4.0`)
+- `LG_MOVEMENT_FAST_EPS_DZ` (default `0.08`)
+- `LG_MOVEMENT_SUSTAIN_COUNT` (default `3`)
 - `LG_MOVEMENT_ABSURD_DISTANCE` / `_SQ`
 - `LG_MOVEMENT_ABSURD_WARN_THROTTLE_MS`
 - `LG_MOVEMENT_SCORE_AMOUNT` (default `3`)
@@ -114,8 +117,9 @@ Yeni kategoriler:
 ## 5) Performans Notları
 
 - Tek döngü yaklaşımı korunur: speed tick içinde movement + sanity tick tetiklenir.
-- Movement detector ring buffer dolmadan analiz yapmaz (window hazır olmadan raise yok).
-- Hover analizi sadece grounded olmayan ardışık örneklerde aday üretir; grounded örnekler hover sayımına girmez.
-- Tüm mesafe karşılaştırmaları squared distance ile yapılır, `sqrt` çağrısı yoktur.
+- Movement detector iki aşamalı çalışır: önce hızlı filtre, sonra sadece gerekirse pattern analizi.
+- Ring buffer window `5` olarak kalır, fakat pattern hesapları son `3` snapshot ile tek pass yapılır.
+- Sustained speed kontrolünde time normalize bölmesi kaldırılmıştır; son örneklerde squared limit üstü ardışıklık aranır.
+- Hover ve z-spike hesapları minimum snapshot ile yapılır, `sqrt` kullanılmaz.
 - Teleport/interior/VW benzeri sıçramalarda movement kontrolü skip + reset alır.
 - Debug score log default kapalıdır (`LG_DEBUG_SCORE_LOG=0`).

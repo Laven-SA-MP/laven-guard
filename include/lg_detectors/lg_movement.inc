@@ -40,40 +40,15 @@ stock bool:LG_MovementIsAbsurdDelta(playerid, index, Float:x, Float:y, Float:z)
     return distSq > LG_MOVEMENT_ABSURD_DISTANCE_SQ;
 }
 
-stock LG_MovementPushSnapshot(playerid, now, Float:x, Float:y, Float:z, bool:onFoot, interior, vw)
+stock LG_MovementPushSnapshot(playerid, now, Float:x, Float:y, Float:z, bool:onFoot)
 {
     new index = LG_MoveIdx[playerid];
-
-    new Float:speedSq = 0.0;
-    new bool:grounded = false;
-
-    if (LG_MoveCount[playerid] > 0)
-    {
-        new prevIndex = (index + LG_MOVEMENT_WINDOW - 1) % LG_MOVEMENT_WINDOW;
-        new dt = now - LG_MoveTS[playerid][prevIndex];
-
-        if (dt > 0)
-        {
-            new Float:dx = x - LG_MoveX[playerid][prevIndex];
-            new Float:dy = y - LG_MoveY[playerid][prevIndex];
-            new Float:dz = z - LG_MoveZ[playerid][prevIndex];
-            new Float:hDistSq = (dx * dx) + (dy * dy);
-            new Float:timeSq = float(dt * dt);
-
-            speedSq = (hDistSq * 1000000.0) / timeSq;
-            grounded = (LG_MovementAbs(dz) < 0.08 && speedSq < 4.0);
-        }
-    }
 
     LG_MoveX[playerid][index] = x;
     LG_MoveY[playerid][index] = y;
     LG_MoveZ[playerid][index] = z;
     LG_MoveTS[playerid][index] = now;
     LG_MoveOnFoot[playerid][index] = onFoot;
-    LG_MoveInterior[playerid][index] = interior;
-    LG_MoveVW[playerid][index] = vw;
-    LG_MoveGrounded[playerid][index] = grounded;
-    LG_MoveSpeedSq[playerid][index] = speedSq;
 
     LG_MoveIdx[playerid] = (index + 1) % LG_MOVEMENT_WINDOW;
 
@@ -87,7 +62,7 @@ stock LG_MovementPushSnapshot(playerid, now, Float:x, Float:y, Float:z, bool:onF
         LG_MoveReady[playerid] = true;
     }
 
-    return 1;
+    return index;
 }
 
 stock LG_MovementSkipAndReset(playerid, now)
@@ -99,82 +74,107 @@ stock LG_MovementSkipAndReset(playerid, now)
     return 1;
 }
 
+stock bool:LG_MovementFastPass(playerid, index)
+{
+    if (LG_MoveCount[playerid] < 2)
+    {
+        return true;
+    }
+
+    new prevIndex = (index + LG_MOVEMENT_WINDOW - 1) % LG_MOVEMENT_WINDOW;
+    new prevPrevIndex = (index + LG_MOVEMENT_WINDOW - 2) % LG_MOVEMENT_WINDOW;
+
+    new Float:dx = LG_MoveX[playerid][prevIndex] - LG_MoveX[playerid][prevPrevIndex];
+    new Float:dy = LG_MoveY[playerid][prevIndex] - LG_MoveY[playerid][prevPrevIndex];
+    new Float:dz = LG_MoveZ[playerid][prevIndex] - LG_MoveZ[playerid][prevPrevIndex];
+    new Float:distSq = (dx * dx) + (dy * dy);
+
+    if (distSq <= LG_MOVEMENT_FAST_EPS_DIST_SQ && LG_MovementAbs(dz) <= LG_MOVEMENT_FAST_EPS_DZ)
+    {
+        return false;
+    }
+
+    return true;
+}
+
 stock LG_MovementAnalyzeWindow(playerid)
 {
-    if (!LG_MoveReady[playerid])
+    if (!LG_MoveReady[playerid] || LG_MoveCount[playerid] < 3)
     {
         return 0;
     }
 
     new latest = (LG_MoveIdx[playerid] + LG_MOVEMENT_WINDOW - 1) % LG_MOVEMENT_WINDOW;
+    new middle = (latest + LG_MOVEMENT_WINDOW - 1) % LG_MOVEMENT_WINDOW;
+    new oldest = (latest + LG_MOVEMENT_WINDOW - 2) % LG_MOVEMENT_WINDOW;
 
-    new speedIndex0 = latest;
-    new speedIndex1 = (latest + LG_MOVEMENT_WINDOW - 1) % LG_MOVEMENT_WINDOW;
-    new speedIndex2 = (latest + LG_MOVEMENT_WINDOW - 2) % LG_MOVEMENT_WINDOW;
-
-    if (
-        LG_MoveOnFoot[playerid][speedIndex0] &&
-        LG_MoveOnFoot[playerid][speedIndex1] &&
-        LG_MoveOnFoot[playerid][speedIndex2] &&
-        LG_MoveSpeedSq[playerid][speedIndex0] > LG_MOVEMENT_ONFOOT_SPEED_LIMIT_SQ &&
-        LG_MoveSpeedSq[playerid][speedIndex1] > LG_MOVEMENT_ONFOOT_SPEED_LIMIT_SQ &&
-        LG_MoveSpeedSq[playerid][speedIndex2] > LG_MOVEMENT_ONFOOT_SPEED_LIMIT_SQ
-    )
-    {
-        LG_DetectorRaise(playerid, LG_SCORE_MOVEMENT, LG_MOVEMENT_SCORE_AMOUNT, "movement sustained speed");
-    }
-
+    new speedLimitCount = 0;
     new zSpikeCount = 0;
-    new zSpikeBest = 0;
     new hoverCount = 0;
-    new hoverBest = 0;
 
-    for (new step = 0; step < (LG_MOVEMENT_WINDOW - 1); step++)
+    new current = oldest;
+
+    for (new step = 0; step < 2; step++)
     {
-        new current = (LG_MoveIdx[playerid] + step) % LG_MOVEMENT_WINDOW;
-        new next = (current + 1) % LG_MOVEMENT_WINDOW;
+        new next;
+        if (step == 0)
+        {
+            next = middle;
+        }
+        else
+        {
+            next = latest;
+        }
 
+        new Float:dx = LG_MoveX[playerid][next] - LG_MoveX[playerid][current];
+        new Float:dy = LG_MoveY[playerid][next] - LG_MoveY[playerid][current];
         new Float:dz = LG_MoveZ[playerid][next] - LG_MoveZ[playerid][current];
+
+        new Float:hDistSq = (dx * dx) + (dy * dy);
+
+        if (LG_MoveOnFoot[playerid][next] && hDistSq > LG_MOVEMENT_ONFOOT_SPEED_LIMIT_SQ)
+        {
+            speedLimitCount++;
+        }
 
         if (LG_MovementAbs(dz) > LG_MOVEMENT_Z_SPIKE)
         {
             zSpikeCount++;
-            if (zSpikeCount > zSpikeBest)
-            {
-                zSpikeBest = zSpikeCount;
-            }
-        }
-        else
-        {
-            zSpikeCount = 0;
         }
 
         if (
             LG_MoveOnFoot[playerid][next] &&
             LG_MovementAbs(dz) < LG_MOVEMENT_HOVER_DZ_EPS &&
-            LG_MoveSpeedSq[playerid][next] > LG_MOVEMENT_HOVER_MIN_HSPEED_SQ &&
-            !LG_MoveGrounded[playerid][current] &&
-            !LG_MoveGrounded[playerid][next]
+            hDistSq > LG_MOVEMENT_HOVER_MIN_HSPEED_SQ
         )
         {
             hoverCount++;
-            if (hoverCount > hoverBest)
-            {
-                hoverBest = hoverCount;
-            }
         }
-        else
-        {
-            hoverCount = 0;
-        }
+
+        current = next;
     }
 
-    if (zSpikeBest >= LG_MOVEMENT_Z_SPIKE_COUNT)
+    new sustainNeed = LG_MOVEMENT_SUSTAIN_COUNT - 1;
+    if (sustainNeed < 1)
+    {
+        sustainNeed = 1;
+    }
+    if (sustainNeed > 2)
+    {
+        sustainNeed = 2;
+    }
+
+    if (speedLimitCount >= sustainNeed)
+    {
+        LG_DetectorRaise(playerid, LG_SCORE_MOVEMENT, LG_MOVEMENT_SCORE_AMOUNT, "movement sustained speed");
+    }
+
+    if (zSpikeCount >= LG_MOVEMENT_Z_SPIKE_COUNT)
     {
         LG_DetectorRaise(playerid, LG_SCORE_MOVEMENT, LG_MOVEMENT_SCORE_AMOUNT, "movement z spike");
     }
 
-    if (hoverBest >= LG_MOVEMENT_HOVER_COUNT)
+    if (hoverCount >= LG_MOVEMENT_HOVER_COUNT)
     {
         LG_DetectorRaise(playerid, LG_SCORE_MOVEMENT, LG_MOVEMENT_SCORE_AMOUNT, "movement hover");
     }
@@ -193,6 +193,10 @@ stock LG_DetectorMovementTick()
             continue;
         }
 
+        #if !LG_MOVEMENT_ENABLE
+            continue;
+        #endif
+
         if (LG_MovementGraceUntil[playerid] > now)
         {
             continue;
@@ -210,17 +214,19 @@ stock LG_DetectorMovementTick()
         }
 
         new bool:inVehicle = IsPlayerInAnyVehicle(playerid);
-        #if !LG_MOVEMENT_CHECK_IN_VEHICLE
-            if (inVehicle)
-            {
-                continue;
-            }
-        #endif
 
         new Float:x;
         new Float:y;
         new Float:z;
         GetPlayerPos(playerid, x, y, z);
+
+        #if !LG_MOVEMENT_CHECK_IN_VEHICLE
+            if (inVehicle)
+            {
+                LG_MovementPushSnapshot(playerid, now, x, y, z, false);
+                continue;
+            }
+        #endif
 
         new interior = GetPlayerInterior(playerid);
         new vw = GetPlayerVirtualWorld(playerid);
@@ -253,7 +259,13 @@ stock LG_DetectorMovementTick()
             continue;
         }
 
-        LG_MovementPushSnapshot(playerid, now, x, y, z, !inVehicle, interior, vw);
+        index = LG_MovementPushSnapshot(playerid, now, x, y, z, true);
+
+        if (!LG_MovementFastPass(playerid, index))
+        {
+            continue;
+        }
+
         LG_MovementAnalyzeWindow(playerid);
     }
 

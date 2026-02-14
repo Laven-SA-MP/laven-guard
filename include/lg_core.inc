@@ -77,10 +77,6 @@ stock LG_CoreResetPlayer(playerid)
         LG_MoveZ[playerid][slot] = 0.0;
         LG_MoveTS[playerid][slot] = 0;
         LG_MoveOnFoot[playerid][slot] = false;
-        LG_MoveInterior[playerid][slot] = 0;
-        LG_MoveVW[playerid][slot] = 0;
-        LG_MoveGrounded[playerid][slot] = false;
-        LG_MoveSpeedSq[playerid][slot] = 0.0;
     }
     return 1;
 }

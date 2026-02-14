@@ -12,6 +12,13 @@ Tüm önemli değişiklikler bu dosyada tutulur.
 - Movement teleport/absurd delta için RP-safe skip + throttled warn log eklendi.
 
 ### Changed
+### Optimize Sprint (Movement Anomali Maliyet Dusurme)
+- Movement detector iki asamali akisla optimize edildi: hizli filtre (distSq + dz) ve tetiklenirse 3 snapshot pattern analizi.
+- Sustained speed kontrolunde zaman normalize bolmesi kaldirildi; ard arda squared hiz limit asimlari sayiliyor (`LG_MOVEMENT_SUSTAIN_COUNT`).
+- Hover ve z-spike hesaplari tek pass/minimum snapshot ile sadeletirildi, ekstra normalize ve sqrt benzeri maliyetler korunarak kaldirildi.
+- Ring buffer state sadeletirildi: buffer sadece pos/tick/onFoot tutuyor, interior/VW son durum state disinda izleniyor.
+- Movement tick early-exit sirasi sertlestirildi; skip kosullari analizden once daha agresif uygulanir hale getirildi.
+
 - `LG_VERSION` değeri `0.0.4` olarak güncellendi.
 - Core speed tick akışına movement sampling entegre edildi (ek timer açılmadı).
 - Policy ve decay mimarisi movement kategorisini kapsayacak şekilde genişletildi.
