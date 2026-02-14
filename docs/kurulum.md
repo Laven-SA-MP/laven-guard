@@ -1,6 +1,6 @@
 # Kurulum
 
-Bu doküman Laven Guard v0.0.2 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
+Bu doküman Laven Guard v0.0.2.1 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
 
 ## 1) Dosya Yapısı
 
@@ -107,6 +107,15 @@ Soft aksiyon override:
 - `LG_SOFT_ACTION_FLOOD` (default: mute)
 - `LG_SOFT_ACTION_SPEED` (default: warn)
 - `LG_SOFT_ACTION_WEAPON` (default: warn)
+
+
+## 4.1) Performans Notları (v0.0.2.1)
+
+- `LG_SPEED_TICK_MS` ile speed tick intervali konfigürasyondan ayarlanır (default `1000`).
+- Log seviyesi default `LG_LOG_WARN` olacak şekilde optimize edilmiştir (`LG_LOG_LEVEL_DEFAULT`).
+- Score artış debug logu default kapalıdır (`LG_DEBUG_SCORE_LOG 0`).
+
+> Not: SA-MP timer yapısı milisaniye seviyesinde tam isabetli çalışmayabilir; RP sunucularda tek decay + tek speed timer yaklaşımı maliyet/denge için korunmuştur.
 
 ## 5) Opsiyonel Auto Hook (İleri Aşama)
 

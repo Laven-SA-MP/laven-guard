@@ -8,6 +8,11 @@ forward LG_Core_TickSpeed();
 
 stock LG_Log(E_LG_LOG_LEVEL:level, const message[])
 {
+    if (level < LG_LOG_LEVEL_DEFAULT)
+    {
+        return 1;
+    }
+
     new levelText[8];
     switch (level)
     {
@@ -56,7 +61,8 @@ stock LG_CoreInit()
     LG_DecayTimerId = SetTimer("LG_Core_TickDecay", LG_DECAY_INTERVAL_SECONDS * 1000, true);
 
     #if LG_SPEED_CHECK_ENABLED
-        LG_SpeedTimerId = SetTimer("LG_Core_TickSpeed", LG_SPEED_CHECK_INTERVAL_MS, true);
+        // SA-MP timerlari tam isabetli degildir; RP sunucularda maliyet/denge icin konfig edilebilir interval kullanilir.
+        LG_SpeedTimerId = SetTimer("LG_Core_TickSpeed", LG_SPEED_TICK_MS, true);
     #endif
 
     LG_CoreStarted = true;

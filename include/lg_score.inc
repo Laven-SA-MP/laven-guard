@@ -17,7 +17,7 @@ stock LG_ScoreAdd(playerid, E_LG_SCORE_CATEGORY:category, amount, const reason[]
         LG_Score[playerid][LG_SCORE_TOTAL] += amount;
     }
 
-    #if LG_SCORE_LOG_ENABLED
+    #if LG_SCORE_LOG_ENABLED && LG_DEBUG_SCORE_LOG
         new currentTick = GetTickCount();
         new lastLogTick = LG_LastScoreLogAt[playerid][category];
 
