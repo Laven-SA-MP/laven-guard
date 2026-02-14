@@ -162,14 +162,44 @@ stock E_LG_PENALTY_TYPE:LG_PolicyEvaluate(playerid, E_LG_SCORE_CATEGORY:category
         LG_Log(LG_LOG_WARN, logMessage);
     }
 
+    #if defined LG_OnPenaltyApply
+        LG_OnPenaltyApply(playerid, _:category, penalty);
+    #endif
+
+    if (penalty == LG_PENALTY_NONE)
+    {
+        return penalty;
+    }
+
     // RP-safe varsayilan davranis:
     // Flood = soft odakli, Speed = kick odakli, Weapon = warn odakli, Sanity = soft warn odakli.
     LG_PolicyApply(playerid, category, penalty, reason);
+
+    #if defined LG_OnPenaltyApplied
+        LG_OnPenaltyApplied(playerid, _:category, _:penalty);
+    #endif
+
     return penalty;
 }
 
 stock E_LG_PENALTY_TYPE:LG_DetectorRaise(playerid, E_LG_SCORE_CATEGORY:category, amount, const reason[])
 {
+    if (category < LG_SCORE_FLOOD || category >= LG_SCORE_CATEGORY_COUNT)
+    {
+        return LG_PENALTY_NONE;
+    }
+
+    if (!LG_CategoryEnabled[category])
+    {
+        return LG_PENALTY_NONE;
+    }
+
     LG_ScoreAdd(playerid, category, amount, reason);
+
+    #if defined LG_OnDetection
+        new newScore = LG_ScoreGet(playerid, category);
+        LG_OnDetection(playerid, _:category, amount, newScore, reason);
+    #endif
+
     return LG_PolicyEvaluate(playerid, category, reason);
 }

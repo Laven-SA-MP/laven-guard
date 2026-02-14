@@ -3,13 +3,13 @@
 #endif
 #define _laven_guard_included
 
-// Laven Guard v0.0.4
+// Laven Guard v0.0.5
 // SAMP 0.3.7 Pawn uyumlu
 // Not: Manual integration required.
 
 #include <a_samp>
 
-#define LG_VERSION "0.0.4"
+#define LG_VERSION "0.0.5"
 
 // --------------------------------------------------
 // Konfigürasyon
@@ -161,6 +161,22 @@
 
 #if !defined LG_SANITY_ENABLE
     #define LG_SANITY_ENABLE 1
+#endif
+
+#if !defined LG_ENABLE_SPEED
+    #define LG_ENABLE_SPEED 1
+#endif
+
+#if !defined LG_ENABLE_SANITY
+    #define LG_ENABLE_SANITY 1
+#endif
+
+#if !defined LG_ENABLE_MOVEMENT
+    #define LG_ENABLE_MOVEMENT 1
+#endif
+
+#if !defined LG_DEBUG_DEFAULT
+    #define LG_DEBUG_DEFAULT 0
 #endif
 
 #if !defined LG_SANITY_TICK_EVERY_N_TICKS
@@ -438,6 +454,12 @@ new LG_DecayTimerId = -1;
 new LG_SpeedTimerId = -1;
 new bool:LG_CoreStarted = false;
 new LG_CoreTickCount = 0;
+new bool:LG_DebugMode = false;
+new bool:LG_CategoryEnabled[LG_SCORE_CATEGORY_COUNT];
+
+forward LG_OnDetection(playerid, category, amount, newScore, reason[]);
+forward LG_OnPenaltyApply(playerid, category, &penalty);
+forward LG_OnPenaltyApplied(playerid, category, penalty);
 
 #include <lg_core>
 #include <lg_score>
@@ -479,4 +501,32 @@ stock LG_OnPlayerText(playerid, const text[])
 stock LG_OnPlayerDisconnect(playerid)
 {
     return LG_CoreOnPlayerDisconnect(playerid);
+}
+
+stock LG_SetCategoryEnabled(E_LG_SCORE_CATEGORY:category, bool:enabled)
+{
+    if (category < LG_SCORE_FLOOD || category >= LG_SCORE_CATEGORY_COUNT)
+    {
+        return 0;
+    }
+
+    // TOTAL kategori puani turetilir, disaridan kapatilmasina izin verilmez.
+    if (category == LG_SCORE_TOTAL)
+    {
+        return 0;
+    }
+
+    LG_CategoryEnabled[category] = enabled;
+    return 1;
+}
+
+stock LG_SetDebugMode(bool:enabled)
+{
+    LG_DebugMode = enabled;
+    return 1;
+}
+
+stock bool:LG_IsDebugMode()
+{
+    return LG_DebugMode;
 }
