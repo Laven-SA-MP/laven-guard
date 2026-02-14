@@ -5,9 +5,10 @@
 - **Hedef:** Detector, score ve policy katmanlarını ayırarak modüler anti-abuse çekirdeği kurmak.
 - **Açıklama:** Flood + Speed detector, category score, global decay ve soft/kick/ban policy akışı eklendi.
 
-## v0.3 — Sanity Checks
+## ✅ v0.0.3 — Sanity Checks
+- **Durum:** Tamamlandı
 - **Hedef:** RP bütünlüğünü bozan anormal oyuncu durumlarını yakalamak.
-- **Açıklama:** Weapon, skin, anim, health ve armor kontrolleri için doğrulama katmanı.
+- **Açıklama:** Weapon, skin, anim, health ve armor kontrolleri; speed tick içinde sanity doğrulama; policy entegrasyonu.
 
 ## v0.4 — Movement Anomaly (RP Safe)
 - **Hedef:** RP akışını bozmadan teleport delta ve hareket anomalilerini filtrelemek.

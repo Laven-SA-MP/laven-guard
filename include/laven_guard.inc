@@ -3,13 +3,13 @@
 #endif
 #define _laven_guard_included
 
-// Laven Guard v0.0.2.1
+// Laven Guard v0.0.3
 // SAMP 0.3.7 Pawn uyumlu
 // Not: Manual integration required.
 
 #include <a_samp>
 
-#define LG_VERSION "0.0.2.1"
+#define LG_VERSION "0.0.3"
 
 // --------------------------------------------------
 // Konfigürasyon
@@ -75,6 +75,74 @@
     #define LG_SPEED_SKIP_MS 5000
 #endif
 
+#if !defined LG_SANITY_ENABLE
+    #define LG_SANITY_ENABLE 1
+#endif
+
+#if !defined LG_SANITY_TICK_EVERY_N_TICKS
+    #define LG_SANITY_TICK_EVERY_N_TICKS 1
+#endif
+
+#if !defined LG_SANITY_GRACE_MS
+    #define LG_SANITY_GRACE_MS 8000
+#endif
+
+#if !defined LG_SANITY_SKIP_AFTER_TELEPORT_MS
+    #define LG_SANITY_SKIP_AFTER_TELEPORT_MS 4000
+#endif
+
+#if !defined LG_SANITY_SCORE_AMOUNT
+    #define LG_SANITY_SCORE_AMOUNT 2
+#endif
+
+#if !defined LG_HEALTH_MIN
+    #define LG_HEALTH_MIN 0.0
+#endif
+
+#if !defined LG_HEALTH_MAX
+    #define LG_HEALTH_MAX 100.0
+#endif
+
+#if !defined LG_ARMOR_MIN
+    #define LG_ARMOR_MIN 0.0
+#endif
+
+#if !defined LG_ARMOR_MAX
+    #define LG_ARMOR_MAX 100.0
+#endif
+
+#if !defined LG_HEALTH_JUMP_MAX
+    #define LG_HEALTH_JUMP_MAX 35.0
+#endif
+
+#if !defined LG_ARMOR_JUMP_MAX
+    #define LG_ARMOR_JUMP_MAX 50.0
+#endif
+
+#if !defined LG_WEAPON_ID_MIN
+    #define LG_WEAPON_ID_MIN 0
+#endif
+
+#if !defined LG_WEAPON_ID_MAX
+    #define LG_WEAPON_ID_MAX 46
+#endif
+
+#if !defined LG_SKIN_ID_MIN
+    #define LG_SKIN_ID_MIN 0
+#endif
+
+#if !defined LG_SKIN_ID_MAX
+    #define LG_SKIN_ID_MAX 311
+#endif
+
+#if !defined LG_ANIM_INDEX_MIN
+    #define LG_ANIM_INDEX_MIN 0
+#endif
+
+#if !defined LG_ANIM_INDEX_MAX
+    #define LG_ANIM_INDEX_MAX 20000
+#endif
+
 #if !defined LG_SOFT_MUTE_MS
     #define LG_SOFT_MUTE_MS 5000
 #endif
@@ -92,6 +160,10 @@
 
 #if !defined LG_SOFT_ACTION_WEAPON
     #define LG_SOFT_ACTION_WEAPON LG_SOFT_ACTION_WARN
+#endif
+
+#if !defined LG_SOFT_ACTION_SANITY
+    #define LG_SOFT_ACTION_SANITY LG_SOFT_ACTION_WARN
 #endif
 
 #if !defined LG_FLOOD_THRESHOLD_SOFT
@@ -130,6 +202,18 @@
     #define LG_WEAPON_THRESHOLD_BAN 100
 #endif
 
+#if !defined LG_SANITY_THRESHOLD_SOFT
+    #define LG_SANITY_THRESHOLD_SOFT 20
+#endif
+
+#if !defined LG_SANITY_THRESHOLD_KICK
+    #define LG_SANITY_THRESHOLD_KICK 80
+#endif
+
+#if !defined LG_SANITY_THRESHOLD_BAN
+    #define LG_SANITY_THRESHOLD_BAN 120
+#endif
+
 #if !defined LG_DECAY_INTERVAL_SECONDS
     #define LG_DECAY_INTERVAL_SECONDS 60
 #endif
@@ -144,6 +228,10 @@
 
 #if !defined LG_DECAY_AMOUNT_WEAPON
     #define LG_DECAY_AMOUNT_WEAPON 0
+#endif
+
+#if !defined LG_DECAY_AMOUNT_SANITY
+    #define LG_DECAY_AMOUNT_SANITY 5
 #endif
 
 #if !defined LG_SCORE_LOG_ENABLED
@@ -178,6 +266,7 @@ enum E_LG_SCORE_CATEGORY
     LG_SCORE_FLOOD,
     LG_SCORE_SPEED,
     LG_SCORE_WEAPON,
+    LG_SCORE_SANITY,
     LG_SCORE_TOTAL,
     LG_SCORE_CATEGORY_COUNT
 }
@@ -205,15 +294,34 @@ new LG_SpeedSkipUntil[MAX_PLAYERS];
 new bool:LG_SpeedReady[MAX_PLAYERS];
 new LG_SpeedAbsurdWarnAt[MAX_PLAYERS];
 
+new Float:LG_LastHealth[MAX_PLAYERS];
+new bool:LG_LastHealthReady[MAX_PLAYERS];
+new Float:LG_LastArmor[MAX_PLAYERS];
+new bool:LG_LastArmorReady[MAX_PLAYERS];
+new LG_LastWeapon[MAX_PLAYERS];
+new bool:LG_LastWeaponReady[MAX_PLAYERS];
+new LG_LastSkin[MAX_PLAYERS];
+new bool:LG_LastSkinReady[MAX_PLAYERS];
+new LG_LastAnimIndex[MAX_PLAYERS];
+new bool:LG_LastAnimReady[MAX_PLAYERS];
+new LG_SanitySkipUntil[MAX_PLAYERS];
+
 new LG_DecayTimerId = -1;
 new LG_SpeedTimerId = -1;
 new bool:LG_CoreStarted = false;
+new LG_CoreSpeedTickCount = 0;
 
 #include <lg_core>
 #include <lg_score>
 #include <lg_policy>
 #include <lg_detectors/lg_flood>
 #include <lg_detectors/lg_speed>
+#include <lg_detectors/lg_sanity_health>
+#include <lg_detectors/lg_sanity_armor>
+#include <lg_detectors/lg_sanity_weapon>
+#include <lg_detectors/lg_sanity_skin>
+#include <lg_detectors/lg_sanity_anim>
+#include <lg_detectors/lg_sanity>
 
 // --------------------------------------------------
 // Stabil Public API

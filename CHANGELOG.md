@@ -2,6 +2,19 @@
 
 Tüm önemli değişiklikler bu dosyada tutulur.
 
+## [0.0.3]
+
+### Added
+- Sanity detector modülleri eklendi: health, armor, weapon, skin, anim ve ortak sanity tick.
+- Yeni config define grubu eklendi: sanity grace/skip/tick/range/jump/policy değerleri.
+- Yeni score kategorisi `LG_SCORE_SANITY` eklendi.
+
+### Changed
+- `LG_Core_TickSpeed` içinde speed + sanity tek döngü akışına taşındı (ek timer yok).
+- Speed detector, interior değişimi ve absürt delta durumlarında sanity skip süresi set etmeye başladı.
+- Policy çözümleme ve soft action akışı sanity kategorisini kapsayacak şekilde genişletildi.
+- Dokümantasyon dosyaları v0.0.3 kapsamına göre güncellendi.
+
 ## [0.0.2.1]
 
 ### Changed

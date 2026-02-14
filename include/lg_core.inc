@@ -47,6 +47,18 @@ stock LG_CoreResetPlayer(playerid)
     LG_SpeedSkipUntil[playerid] = GetTickCount() + LG_SPEED_SKIP_MS;
     LG_SpeedReady[playerid] = false;
     LG_SpeedAbsurdWarnAt[playerid] = 0;
+
+    LG_LastHealth[playerid] = 0.0;
+    LG_LastHealthReady[playerid] = false;
+    LG_LastArmor[playerid] = 0.0;
+    LG_LastArmorReady[playerid] = false;
+    LG_LastWeapon[playerid] = 0;
+    LG_LastWeaponReady[playerid] = false;
+    LG_LastSkin[playerid] = 0;
+    LG_LastSkinReady[playerid] = false;
+    LG_LastAnimIndex[playerid] = 0;
+    LG_LastAnimReady[playerid] = false;
+    LG_SanitySkipUntil[playerid] = GetTickCount() + LG_SANITY_GRACE_MS;
     return 1;
 }
 
@@ -123,6 +135,14 @@ public LG_Core_TickSpeed()
 {
     #if LG_SPEED_CHECK_ENABLED
         LG_DetectorSpeedTick();
+
+        #if LG_SANITY_ENABLE
+            LG_CoreSpeedTickCount++;
+            if (LG_SANITY_TICK_EVERY_N_TICKS <= 1 || (LG_CoreSpeedTickCount % LG_SANITY_TICK_EVERY_N_TICKS) == 0)
+            {
+                LG_DetectorSanityTick();
+            }
+        #endif
     #endif
     return 1;
 }

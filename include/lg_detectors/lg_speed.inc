@@ -54,6 +54,7 @@ stock LG_DetectorSpeedTick()
         {
             LG_LastInterior[playerid] = interior;
             LG_SpeedSkipUntil[playerid] = now + LG_SPEED_SKIP_MS;
+            LG_SanitySkipUntil[playerid] = now + LG_SANITY_SKIP_AFTER_TELEPORT_MS;
 
             LG_LastPosX[playerid] = x;
             LG_LastPosY[playerid] = y;
@@ -70,6 +71,7 @@ stock LG_DetectorSpeedTick()
         {
             // Absurt distance kill switch: score basma, cooldown baslat, pozisyonu guncelle.
             LG_SpeedSkipUntil[playerid] = now + LG_SPEED_SKIP_MS;
+            LG_SanitySkipUntil[playerid] = now + LG_SANITY_SKIP_AFTER_TELEPORT_MS;
 
             if ((now - LG_SpeedAbsurdWarnAt[playerid]) >= LG_SPEED_ABSURD_WARN_THROTTLE_MS)
             {

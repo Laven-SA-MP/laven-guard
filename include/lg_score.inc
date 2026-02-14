@@ -81,10 +81,17 @@ stock LG_ScoreDecayAll(playerid)
         LG_Score[playerid][LG_SCORE_WEAPON] = 0;
     }
 
+    LG_Score[playerid][LG_SCORE_SANITY] -= LG_DECAY_AMOUNT_SANITY;
+    if (LG_Score[playerid][LG_SCORE_SANITY] < 0)
+    {
+        LG_Score[playerid][LG_SCORE_SANITY] = 0;
+    }
+
     LG_Score[playerid][LG_SCORE_TOTAL] =
         LG_Score[playerid][LG_SCORE_FLOOD] +
         LG_Score[playerid][LG_SCORE_SPEED] +
-        LG_Score[playerid][LG_SCORE_WEAPON];
+        LG_Score[playerid][LG_SCORE_WEAPON] +
+        LG_Score[playerid][LG_SCORE_SANITY];
 
     return 1;
 }
