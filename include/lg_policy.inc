@@ -10,6 +10,7 @@ stock LG_PolicyGetSoftAction(E_LG_SCORE_CATEGORY:category)
         case LG_SCORE_FLOOD: return LG_SOFT_ACTION_FLOOD;
         case LG_SCORE_SPEED: return LG_SOFT_ACTION_SPEED;
         case LG_SCORE_WEAPON: return LG_SOFT_ACTION_WEAPON;
+        case LG_SCORE_SANITY: return LG_SOFT_ACTION_SANITY;
     }
     return LG_SOFT_ACTION_WARN;
 }
@@ -87,6 +88,12 @@ stock E_LG_PENALTY_TYPE:LG_PolicyResolve(E_LG_SCORE_CATEGORY:category, score)
             kickThreshold = LG_WEAPON_THRESHOLD_KICK;
             banThreshold = LG_WEAPON_THRESHOLD_BAN;
         }
+        case LG_SCORE_SANITY:
+        {
+            softThreshold = LG_SANITY_THRESHOLD_SOFT;
+            kickThreshold = LG_SANITY_THRESHOLD_KICK;
+            banThreshold = LG_SANITY_THRESHOLD_BAN;
+        }
         default:
         {
             return LG_PENALTY_NONE;
@@ -122,7 +129,7 @@ stock E_LG_PENALTY_TYPE:LG_PolicyEvaluate(playerid, E_LG_SCORE_CATEGORY:category
     }
 
     // RP-safe varsayilan davranis:
-    // Flood = soft odakli, Speed = kick odakli, Weapon = ban odakli (detector placeholder).
+    // Flood = soft odakli, Speed = kick odakli, Weapon = warn odakli, Sanity = soft warn odakli.
     LG_PolicyApply(playerid, category, penalty, reason);
     return penalty;
 }

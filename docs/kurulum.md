@@ -1,6 +1,6 @@
 # Kurulum
 
-Bu doküman Laven Guard v0.0.2.1 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
+Bu doküman Laven Guard v0.0.3 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
 
 ## 1) Dosya Yapısı
 
@@ -10,6 +10,12 @@ Bu doküman Laven Guard v0.0.2.1 için manual entegrasyon, modül yapısı ve po
 - `include/lg_policy.inc` → eşik ve aksiyon kararları
 - `include/lg_detectors/lg_flood.inc` → chat flood detector
 - `include/lg_detectors/lg_speed.inc` → speed detector
+- `include/lg_detectors/lg_sanity.inc` → sanity ortak tick akışı
+- `include/lg_detectors/lg_sanity_health.inc` → health doğrulama
+- `include/lg_detectors/lg_sanity_armor.inc` → armor doğrulama
+- `include/lg_detectors/lg_sanity_weapon.inc` → weapon doğrulama
+- `include/lg_detectors/lg_sanity_skin.inc` → skin doğrulama
+- `include/lg_detectors/lg_sanity_anim.inc` → anim doğrulama
 
 ## 2) Manual Entegrasyon (Zorunlu Taban)
 
@@ -52,7 +58,7 @@ public OnPlayerDisconnect(playerid, reason)
 ```
 
 > Not: `LG_Init()` çağrısı core timerları başlatır (score decay + speed tick).
-> Opsiyonel: `OnGameModeExit` içinde `LG_Shutdown()` çağırarak timerları temiz kapatabilirsiniz.
+> v0.0.3 ile sanity kontrolleri aynı speed tick içinde çalışır, yeni timer açılmaz.
 
 ## 3) Policy ve Score Mantığı
 
@@ -63,76 +69,39 @@ Akış:
 3. `LG_PolicyEvaluate` eşikleri kontrol eder
 4. Policy aksiyonu uygulanır
 
-Penalty tipleri:
+Yeni kategori:
 
-- `LG_PENALTY_NONE`
-- `LG_PENALTY_SOFT`
-- `LG_PENALTY_KICK`
-- `LG_PENALTY_BAN`
-
-Varsayılan RP-safe yaklaşım:
-
-- Flood: soft odak
-- Speed: kick odak
-- Weapon: ban odak (detector placeholder)
+- `LG_SCORE_SANITY` (RP-safe default: soft warn)
 
 ## 4) Önemli Config Define'ları
 
-Threshold:
+### Sanity
 
-- `LG_FLOOD_THRESHOLD_SOFT/KICK/BAN`
-- `LG_SPEED_THRESHOLD_SOFT/KICK/BAN`
+- `LG_SANITY_ENABLE` (default `1`)
+- `LG_SANITY_TICK_EVERY_N_TICKS` (default `1`)
+- `LG_SANITY_GRACE_MS` (default `8000`)
+- `LG_SANITY_SKIP_AFTER_TELEPORT_MS` (default `4000`)
+- `LG_SANITY_SCORE_AMOUNT` (default `2`)
 
-Decay:
+### Sanity Aralıkları
 
-- `LG_DECAY_INTERVAL_SECONDS`
-- `LG_DECAY_AMOUNT_FLOOD`
-- `LG_DECAY_AMOUNT_SPEED`
+- `LG_HEALTH_MIN` / `LG_HEALTH_MAX`
+- `LG_ARMOR_MIN` / `LG_ARMOR_MAX`
+- `LG_HEALTH_JUMP_MAX`
+- `LG_ARMOR_JUMP_MAX`
+- `LG_WEAPON_ID_MIN` / `LG_WEAPON_ID_MAX`
+- `LG_SKIN_ID_MIN` / `LG_SKIN_ID_MAX`
+- `LG_ANIM_INDEX_MIN` / `LG_ANIM_INDEX_MAX`
 
-Detector:
+### Policy
 
-- `LG_CHAT_FLOOD_LIMIT`
-- `LG_CHAT_WINDOW_MS`
-- `LG_SPEED_DISTANCE_LIMIT`
-- `LG_SPEED_ABSURD_DISTANCE`
-- `LG_SPEED_SKIP_MS`
+- `LG_SANITY_THRESHOLD_SOFT`
+- `LG_SANITY_THRESHOLD_KICK`
+- `LG_SANITY_THRESHOLD_BAN`
+- `LG_SOFT_ACTION_SANITY` (default `LG_SOFT_ACTION_WARN`)
 
-Score loglama:
+## 5) Performans Notları
 
-- `LG_SCORE_LOG_ENABLED` (`1`: aktif, `0`: tamamen sessiz)
-- `LG_SCORE_LOG_THROTTLE_MS` (aynı oyuncu + kategori logları için minimum bekleme süresi)
-
-Soft aksiyon override:
-
-- `LG_SOFT_ACTION_FLOOD` (default: mute)
-- `LG_SOFT_ACTION_SPEED` (default: warn)
-- `LG_SOFT_ACTION_WEAPON` (default: warn)
-
-
-## 4.1) Performans Notları (v0.0.2.1)
-
-- `LG_SPEED_TICK_MS` ile speed tick intervali konfigürasyondan ayarlanır (default `1000`).
-- Log seviyesi default `LG_LOG_WARN` olacak şekilde optimize edilmiştir (`LG_LOG_LEVEL_DEFAULT`).
-- Score artış debug logu default kapalıdır (`LG_DEBUG_SCORE_LOG 0`).
-
-> Not: SA-MP timer yapısı milisaniye seviyesinde tam isabetli çalışmayabilir; RP sunucularda tek decay + tek speed timer yaklaşımı maliyet/denge için korunmuştur.
-
-## 5) Opsiyonel Auto Hook (İleri Aşama)
-
-Y_HOOKS entegrasyonu opsiyonel plan olarak durur.
-Varsayılan akış her zaman manual integration ile stabil çalışır.
-
-## 6) Sık Sorulan
-
-### Gamemode içinde zaten OnPlayerText varsa?
-
-Mevcut callback içine `LG_OnPlayerText(playerid, text)` çağrısı eklenir.
-Dönüş `0` ise mesaj engellenir, `1` ise normal akış sürer.
-
-### Speed detector yanlış pozitif üretir mi?
-
-Riski azaltmak için:
-
-- Araç içindeyse kontrol atlanır
-- Interior değişiminde cooldown uygulanır
-- Eşik ve decay değerleri sunucuya göre ayarlanmalıdır
+- Tek döngü yaklaşımı korunur: speed tick içinde sanity tick tetiklenir.
+- Teleport/interior benzeri sıçramalarda sanity kontrolü geçici skip alır.
+- Debug score log default kapalıdır (`LG_DEBUG_SCORE_LOG=0`).
