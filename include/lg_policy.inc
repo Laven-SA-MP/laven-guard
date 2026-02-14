@@ -3,6 +3,17 @@
 #endif
 #define _lg_policy_included
 
+stock LG_PolicyGetSoftAction(E_LG_SCORE_CATEGORY:category)
+{
+    switch (category)
+    {
+        case LG_SCORE_FLOOD: return LG_SOFT_ACTION_FLOOD;
+        case LG_SCORE_SPEED: return LG_SOFT_ACTION_SPEED;
+        case LG_SCORE_WEAPON: return LG_SOFT_ACTION_WEAPON;
+    }
+    return LG_SOFT_ACTION_WARN;
+}
+
 stock LG_PolicyApply(playerid, E_LG_SCORE_CATEGORY:category, E_LG_PENALTY_TYPE:penalty, const reason[])
 {
     if (!IsPlayerConnected(playerid) || penalty == LG_PENALTY_NONE)
@@ -16,7 +27,9 @@ stock LG_PolicyApply(playerid, E_LG_SCORE_CATEGORY:category, E_LG_PENALTY_TYPE:p
     {
         case LG_PENALTY_SOFT:
         {
-            if (category == LG_SCORE_FLOOD)
+            new softAction = LG_PolicyGetSoftAction(category);
+
+            if (softAction == LG_SOFT_ACTION_MUTE)
             {
                 LG_ChatMuteUntil[playerid] = GetTickCount() + LG_SOFT_MUTE_MS;
                 format(logMessage, sizeof(logMessage), "SOFT p:%d c:%d mute uygulandi (%s)", playerid, _:category, reason);
@@ -25,6 +38,7 @@ stock LG_PolicyApply(playerid, E_LG_SCORE_CATEGORY:category, E_LG_PENALTY_TYPE:p
             {
                 format(logMessage, sizeof(logMessage), "SOFT p:%d c:%d uyari kaydi (%s)", playerid, _:category, reason);
             }
+
             LG_Log(LG_LOG_WARN, logMessage);
             return 1;
         }

@@ -15,6 +15,11 @@ Tüm önemli değişiklikler bu dosyada tutulur.
 - Chat flood kontrolü detector + score + policy akışına taşındı.
 - Public API stabil tutuldu: `LG_Init`, `LG_OnPlayerConnect`, `LG_OnPlayerText`.
 
+### Hotfix Notes (v0.0.2)
+- `LG_OnPlayerDisconnect` public API eklendi, disconnect anında player state tamamen resetlenir.
+- Soft action policy category bazlı hale getirildi (flood=mute, speed=warn, weapon=warn) ve define override desteği eklendi.
+- Speed detector için absürt mesafe kill switch eklendi (`LG_SPEED_ABSURD_DISTANCE`).
+
 ## [Unreleased]
 
 ### Added
