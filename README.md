@@ -56,6 +56,8 @@ public OnGameModeExit()
 }
 ```
 
+> Not: `OnPlayerDisconnect` callback entegrasyonu zorunludur; player state reset işlemi için gereklidir.
+
 ## ⚙️ Konfigürasyon Mantığı
 
 Framework `#define` ile yönetilir:
