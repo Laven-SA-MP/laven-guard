@@ -1,24 +1,22 @@
 # Kurulum
 
-Bu doküman, Laven Guard'ın SAMP 0.3.7 Pawn projelerine manuel ve opsiyonel auto hook yaklaşımıyla entegrasyonunu açıklar.
+Bu doküman Laven Guard v0.0.2 için manual entegrasyon, modül yapısı ve policy/score ayarlarını açıklar.
 
-## 1) Manuel Entegrasyon (Önerilen ve Zorunlu Taban)
+## 1) Dosya Yapısı
 
-Manual entegrasyon her zaman çalışır ve varsayılan yaklaşımdır.
+- `include/laven_guard.inc` → public API
+- `include/lg_core.inc` → init + timer + state
+- `include/lg_score.inc` → score işlemleri + decay
+- `include/lg_policy.inc` → eşik ve aksiyon kararları
+- `include/lg_detectors/lg_flood.inc` → chat flood detector
+- `include/lg_detectors/lg_speed.inc` → speed detector
 
-### Adımlar
-
-1. `laven_guard.inc` dosyasını `include/` altında konumlandırın.
-2. Gamemode dosyanızda include edin:
+## 2) Manual Entegrasyon (Zorunlu Taban)
 
 ```pawn
 #include <a_samp>
 #include <laven_guard>
-```
 
-3. Callback'lerde API çağrılarını tetikleyin:
-
-```pawn
 public OnGameModeInit()
 {
     LG_Init();
@@ -41,28 +39,66 @@ public OnPlayerText(playerid, text[])
 }
 ```
 
-## 2) Opsiyonel Auto Hook Yaklaşımı (İleri Aşama)
+> Not: `LG_Init()` çağrısı core timerları başlatır (score decay + speed tick).
 
-- Y_HOOKS desteği ilerleyen sürümlerde opsiyonel olarak sunulacaktır.
-- Varsayılan durumda kapalıdır.
-- Amaç, mevcut gamemode callback'leriyle çakışmasız çalışmaktır.
-- Y_HOOKS olmasa dahi sistem manual integration ile tam çalışmalıdır.
+## 3) Policy ve Score Mantığı
 
-## 3) Sık Sorulanlar
+Akış:
 
-### Soru: Gamemode içinde zaten `OnPlayerText` var, ne olacak?
+1. Detector anomaly yakalar
+2. `LG_ScoreAdd` ile category score artar
+3. `LG_PolicyEvaluate` eşikleri kontrol eder
+4. Policy aksiyonu uygulanır
 
-Sorun olmaz. Mevcut callback'in içinde `LG_OnPlayerText(playerid, text)` çağrısını ekleyin.
+Penalty tipleri:
 
-- `0` dönerse mesajı engelleyin (`return 0`).
-- `1` dönerse mevcut akışı sürdürün.
+- `LG_PENALTY_NONE`
+- `LG_PENALTY_SOFT`
+- `LG_PENALTY_KICK`
+- `LG_PENALTY_BAN`
 
-### Soru: Birden fazla anti-abuse sistemi kullanıyorsam?
+Varsayılan RP-safe yaklaşım:
 
-Çağrı sırasını net tutun ve log kaynaklarını ayırın. Laven Guard'ın dönüş değerine göre kontrolü merkezde toplayın.
+- Flood: soft odak
+- Speed: kick odak
+- Weapon: ban odak (detector placeholder)
 
-## 4) Notlar
+## 4) Önemli Config Define'ları
 
-- Eşik değerlerini sunucu profilinize göre test ederek belirleyin.
-- Çok agresif eşikler yanlış pozitif üretebilir.
-- Performans için kontrol noktalarını sınırlı callback'lerde tutun.
+Threshold:
+
+- `LG_FLOOD_THRESHOLD_SOFT/KICK/BAN`
+- `LG_SPEED_THRESHOLD_SOFT/KICK/BAN`
+
+Decay:
+
+- `LG_DECAY_INTERVAL_SECONDS`
+- `LG_DECAY_AMOUNT_FLOOD`
+- `LG_DECAY_AMOUNT_SPEED`
+
+Detector:
+
+- `LG_CHAT_FLOOD_LIMIT`
+- `LG_CHAT_WINDOW_MS`
+- `LG_SPEED_DISTANCE_LIMIT`
+- `LG_SPEED_SKIP_MS`
+
+## 5) Opsiyonel Auto Hook (İleri Aşama)
+
+Y_HOOKS entegrasyonu opsiyonel plan olarak durur.
+Varsayılan akış her zaman manual integration ile stabil çalışır.
+
+## 6) Sık Sorulan
+
+### Gamemode içinde zaten OnPlayerText varsa?
+
+Mevcut callback içine `LG_OnPlayerText(playerid, text)` çağrısı eklenir.
+Dönüş `0` ise mesaj engellenir, `1` ise normal akış sürer.
+
+### Speed detector yanlış pozitif üretir mi?
+
+Riski azaltmak için:
+
+- Araç içindeyse kontrol atlanır
+- Interior değişiminde cooldown uygulanır
+- Eşik ve decay değerleri sunucuya göre ayarlanmalıdır

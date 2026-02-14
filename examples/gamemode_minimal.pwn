@@ -8,6 +8,7 @@ main()
 
 public OnGameModeInit()
 {
+    // LG_Init core timerlarini baslatir (decay + speed tick).
     LG_Init();
     return 1;
 }

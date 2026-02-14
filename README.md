@@ -2,21 +2,27 @@
 
 SAMP 0.3.7 Pawn ekosistemi için RP odaklı anti-abuse / koruma framework.
 
-Laven Guard, roleplay sunucularında oyuncu deneyimini bozan davranışları düşük maliyetle kontrol altına almak için tasarlanmış modüler bir altyapıdır.
+Laven Guard, detector + score + policy yaklaşımıyla çalışan modüler bir altyapıdır.
+Detector modülleri ceza basmaz; yalnızca event ve score üretir. Policy engine, eşiklere göre aksiyon seçer.
 
 ## 🎯 Hedefler
 
-- ⚡ **Performans:** Hafif, öngörülebilir ve düşük overhead.
-- 🧩 **Modülerlik:** İhtiyacın olan koruma katmanını aç, diğerlerini kapalı tut.
-- 🔌 **Tak-çalıştır yaklaşımı:** Manual entegrasyon ile hızlı devreye alma.
-- 🧾 **Temiz log akışı:** İnceleme ve operasyon için sade çıktılar.
-- 🏭 **Üretime hazır yapı:** Sürdürülebilir, dokümante ve yönetilebilir temel.
+- ⚡ Performans: düşük overhead, sade kontrol döngüsü
+- 🧩 Modülerlik: detector / score / policy katmanları ayrı
+- 🔌 Tak-çalıştır: manual entegrasyon her zaman aktif
+- 🧾 Temiz log: sabit format, seviyeli loglama
+- 🛡️ RP-safe: yanlış pozitifte sert ceza default değil
 
-## 🚀 Hızlı Başlangıç
+## 🏗️ Modül Yapısı
 
-1. `include/laven_guard.inc` dosyasını projenize ekleyin.
-2. Gamemode dosyanızda include edin.
-3. İlgili callback'lerde Laven Guard API çağrılarını manuel olarak çalıştırın.
+- `include/laven_guard.inc` → ana public API
+- `include/lg_core.inc` → init, timer, state yönetimi
+- `include/lg_score.inc` → score add/get/decay
+- `include/lg_policy.inc` → eşik/policy/aksiyon
+- `include/lg_detectors/lg_flood.inc` → chat flood detector
+- `include/lg_detectors/lg_speed.inc` → speed anomaly detector
+
+## 🚀 Hızlı Başlangıç (Manual Integration)
 
 ```pawn
 #include <a_samp>
@@ -44,29 +50,34 @@ public OnPlayerText(playerid, text[])
 }
 ```
 
-## 🧱 Modüller (Yakında)
-
-- Chat Flood Guard
-- Command Spam Guard
-- Dialog Spam Guard
-- Sanity Checks
-- Movement Anomaly Detection
-- Logging Pipeline
-
 ## ⚙️ Konfigürasyon Mantığı
 
-Laven Guard, `#define` tabanlı aç/kapa modelini benimser.
+Framework `#define` ile yönetilir:
 
-- Her modül için ayrı define.
-- Varsayılan: güvenli ve minimal temel.
-- İhtiyaca göre RP profilinize uygun eşik yönetimi.
+- Detector aç/kapa
+- Category threshold değerleri
+- Score decay interval ve amount
+- Soft/Kick/Ban policy akışı
 
-Detaylar için: `docs/kurulum.md`.
+Örnek kategoriler:
+
+- Flood score
+- Speed score
+- Weapon score (placeholder)
+- Total score
+
+## 📌 v0.0.2 Notları
+
+- Score decay sistemi eklendi (global timer)
+- Policy engine eklendi (soft/kick/ban)
+- Flood detector policy akışına taşındı
+- Speed detector eklendi (vehicle/interior skip, cooldown)
 
 ## 🧭 Destek
 
-- Hata / öneri: GitHub Issues
-- Sürüm planı: `ROADMAP.md`
+- Hata / geliştirme: GitHub Issues
+- Kurulum detayları: `docs/kurulum.md`
+- Yol haritası: `ROADMAP.md`
 
 ---
 
