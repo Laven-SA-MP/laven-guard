@@ -10,6 +10,14 @@ Tüm önemli değişiklikler bu dosyada tutulur.
 - Yeni score kategorisi `LG_SCORE_SANITY` eklendi.
 
 ### Changed
+### Optimize Sprint (Sanity Odakli)
+- Sanity tick sampling default `LG_SANITY_TICK_EVERY_N_TICKS=2` yapildi; speed tick her turde, sanity modulo ile calisir.
+- Sanity detector tek pass akisina alindi; native cagrilari ucuzdan pahaliya siralandi (weapon/skin -> health/armor -> anim).
+- Speed cooldown aktifken sanity tamamen skip edilir; grace suresinde cache guncellemesi yapilmaz.
+- Health/armor jump kontrolu cache-ready flag ile sertlestirildi (`LG_HealthReady`, `LG_ArmorReady`), ilk okumada raise yapilmaz.
+- Anim sanity kontrolu config ile default kapatildi (`LG_SANITY_ANIM_ENABLE=0`).
+- Policy loglari kategori bazli throttle aldi (`LG_POLICY_LOG_THROTTLE_MS=1000`) ve log spami kisitlandi.
+
 - `LG_Core_TickSpeed` içinde speed + sanity tek döngü akışına taşındı (ek timer yok).
 - Speed detector, interior değişimi ve absürt delta durumlarında sanity skip süresi set etmeye başladı.
 - Policy çözümleme ve soft action akışı sanity kategorisini kapsayacak şekilde genişletildi.

@@ -78,10 +78,11 @@ Yeni kategori:
 ### Sanity
 
 - `LG_SANITY_ENABLE` (default `1`)
-- `LG_SANITY_TICK_EVERY_N_TICKS` (default `1`)
+- `LG_SANITY_TICK_EVERY_N_TICKS` (default `2`)
 - `LG_SANITY_GRACE_MS` (default `8000`)
 - `LG_SANITY_SKIP_AFTER_TELEPORT_MS` (default `4000`)
 - `LG_SANITY_SCORE_AMOUNT` (default `2`)
+- `LG_SANITY_ANIM_ENABLE` (default `0`)
 
 ### Sanity Aralıkları
 
@@ -99,6 +100,7 @@ Yeni kategori:
 - `LG_SANITY_THRESHOLD_KICK`
 - `LG_SANITY_THRESHOLD_BAN`
 - `LG_SOFT_ACTION_SANITY` (default `LG_SOFT_ACTION_WARN`)
+- `LG_POLICY_LOG_THROTTLE_MS` (default `1000`)
 
 ## 5) Performans Notları
 

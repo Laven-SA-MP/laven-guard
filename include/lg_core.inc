@@ -38,6 +38,7 @@ stock LG_CoreResetPlayer(playerid)
     {
         LG_Score[playerid][category] = 0;
         LG_LastScoreLogAt[playerid][category] = 0;
+        LG_LastPolicyLogAt[playerid][category] = 0;
     }
 
     LG_LastPosX[playerid] = 0.0;
@@ -49,9 +50,9 @@ stock LG_CoreResetPlayer(playerid)
     LG_SpeedAbsurdWarnAt[playerid] = 0;
 
     LG_LastHealth[playerid] = 0.0;
-    LG_LastHealthReady[playerid] = false;
+    LG_HealthReady[playerid] = false;
     LG_LastArmor[playerid] = 0.0;
-    LG_LastArmorReady[playerid] = false;
+    LG_ArmorReady[playerid] = false;
     LG_LastWeapon[playerid] = 0;
     LG_LastWeaponReady[playerid] = false;
     LG_LastSkin[playerid] = 0;
@@ -137,8 +138,11 @@ public LG_Core_TickSpeed()
         LG_DetectorSpeedTick();
 
         #if LG_SANITY_ENABLE
-            LG_CoreSpeedTickCount++;
-            if (LG_SANITY_TICK_EVERY_N_TICKS <= 1 || (LG_CoreSpeedTickCount % LG_SANITY_TICK_EVERY_N_TICKS) == 0)
+            LG_CoreTickCount++;
+
+            // 0 veya negatif deger verilirse guvenli sekilde her tick calisir.
+            new sanityTickEvery = LG_SANITY_TICK_EVERY_N_TICKS;
+            if (sanityTickEvery <= 1 || (LG_CoreTickCount % sanityTickEvery) == 0)
             {
                 LG_DetectorSanityTick();
             }
