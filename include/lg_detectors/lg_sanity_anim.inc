@@ -10,7 +10,7 @@ stock LG_DetectorSanityAnim(playerid)
 
         if (animIndex < LG_ANIM_INDEX_MIN || animIndex > LG_ANIM_INDEX_MAX)
         {
-            LG_DetectorRaise(playerid, LG_SCORE_WEAPON, LG_SANITY_SCORE_AMOUNT, "sanity anim invalid");
+            LG_DetectorRaise(playerid, LG_SCORE_SANITY, LG_SANITY_SCORE_AMOUNT, "sanity anim invalid");
         }
 
         LG_LastAnimIndex[playerid] = animIndex;
