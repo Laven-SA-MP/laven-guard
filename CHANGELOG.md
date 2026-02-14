@@ -19,6 +19,11 @@ Tüm önemli değişiklikler bu dosyada tutulur.
 - Ring buffer state sadeletirildi: buffer sadece pos/tick/onFoot tutuyor, interior/VW son durum state disinda izleniyor.
 - Movement tick early-exit sirasi sertlestirildi; skip kosullari analizden once daha agresif uygulanir hale getirildi.
 
+### Hotfix (v0.0.4 - Hover Pattern Fix)
+- Hover pattern analizi son 4 snapshot (3 delta) uzerinden hesaplanacak sekilde duzeltildi.
+- `LG_MOVEMENT_HOVER_COUNT` default `3` korunarak hover tetikleme tekrar calisir hale getirildi.
+- Fast filter (son 2 snapshot) ve z-spike/sustained speed akislarinin mevcut davranisi korundu.
+
 - `LG_VERSION` değeri `0.0.4` olarak güncellendi.
 - Core speed tick akışına movement sampling entegre edildi (ek timer açılmadı).
 - Policy ve decay mimarisi movement kategorisini kapsayacak şekilde genişletildi.

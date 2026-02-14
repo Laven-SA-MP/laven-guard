@@ -118,7 +118,7 @@ Yeni kategoriler:
 
 - Tek döngü yaklaşımı korunur: speed tick içinde movement + sanity tick tetiklenir.
 - Movement detector iki aşamalı çalışır: önce hızlı filtre, sonra sadece gerekirse pattern analizi.
-- Ring buffer window `5` olarak kalır, fakat pattern hesapları son `3` snapshot ile tek pass yapılır.
+- Ring buffer window `5` olarak kalır; fast filter son `2`, sustained/z-spike son `3`, hover pattern ise son `4` snapshot (3 delta) ile hesaplanır.
 - Sustained speed kontrolünde time normalize bölmesi kaldırılmıştır; son örneklerde squared limit üstü ardışıklık aranır.
 - Hover ve z-spike hesapları minimum snapshot ile yapılır, `sqrt` kullanılmaz.
 - Teleport/interior/VW benzeri sıçramalarda movement kontrolü skip + reset alır.

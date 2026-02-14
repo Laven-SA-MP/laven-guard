@@ -111,6 +111,7 @@ stock LG_MovementAnalyzeWindow(playerid)
     new speedLimitCount = 0;
     new zSpikeCount = 0;
     new hoverCount = 0;
+    new bool:hoverReady = (LG_MoveCount[playerid] >= 4);
 
     new current = oldest;
 
@@ -142,16 +143,46 @@ stock LG_MovementAnalyzeWindow(playerid)
             zSpikeCount++;
         }
 
-        if (
-            LG_MoveOnFoot[playerid][next] &&
-            LG_MovementAbs(dz) < LG_MOVEMENT_HOVER_DZ_EPS &&
-            hDistSq > LG_MOVEMENT_HOVER_MIN_HSPEED_SQ
-        )
-        {
-            hoverCount++;
-        }
-
         current = next;
+    }
+
+    if (hoverReady)
+    {
+        new hoverOldest = (latest + LG_MOVEMENT_WINDOW - 3) % LG_MOVEMENT_WINDOW;
+        current = hoverOldest;
+
+        for (new step = 0; step < 3; step++)
+        {
+            new next;
+            if (step == 0)
+            {
+                next = (hoverOldest + 1) % LG_MOVEMENT_WINDOW;
+            }
+            else if (step == 1)
+            {
+                next = (hoverOldest + 2) % LG_MOVEMENT_WINDOW;
+            }
+            else
+            {
+                next = latest;
+            }
+
+            new Float:dx = LG_MoveX[playerid][next] - LG_MoveX[playerid][current];
+            new Float:dy = LG_MoveY[playerid][next] - LG_MoveY[playerid][current];
+            new Float:dz = LG_MoveZ[playerid][next] - LG_MoveZ[playerid][current];
+            new Float:hDistSq = (dx * dx) + (dy * dy);
+
+            if (
+                LG_MoveOnFoot[playerid][next] &&
+                LG_MovementAbs(dz) < LG_MOVEMENT_HOVER_DZ_EPS &&
+                hDistSq > LG_MOVEMENT_HOVER_MIN_HSPEED_SQ
+            )
+            {
+                hoverCount++;
+            }
+
+            current = next;
+        }
     }
 
     new sustainNeed = LG_MOVEMENT_SUSTAIN_COUNT - 1;
@@ -176,6 +207,7 @@ stock LG_MovementAnalyzeWindow(playerid)
 
     if (hoverCount >= LG_MOVEMENT_HOVER_COUNT)
     {
+        // Teorik olarak hoverCount artik 0..3 araligina cikabilir (4 snapshot => 3 delta).
         LG_DetectorRaise(playerid, LG_SCORE_MOVEMENT, LG_MOVEMENT_SCORE_AMOUNT, "movement hover");
     }
 
