@@ -457,9 +457,53 @@ new LG_CoreTickCount = 0;
 new bool:LG_DebugMode = false;
 new bool:LG_CategoryEnabled[LG_SCORE_CATEGORY_COUNT];
 
-forward LG_OnDetection(playerid, category, amount, newScore, reason[]);
-forward LG_OnPenaltyApply(playerid, category, &penalty);
-forward LG_OnPenaltyApplied(playerid, category, penalty);
+// --------------------------------------------------
+// Opsiyonel Hook Callback Guard/Alias
+// --------------------------------------------------
+// Varsayilan olarak hook callback'leri kapali kabul edilir.
+// Gamemode callback implement edecekse include oncesi su alias'lari tanimlamalidir:
+//   #define LG_HOOK_DETECTION_CB LG_OnDetection
+//   #define LG_HOOK_PENALTY_APPLY_CB LG_OnPenaltyApply
+//   #define LG_HOOK_PENALTY_APPLIED_CB LG_OnPenaltyApplied
+
+#if defined LG_HOOK_DETECTION_CB
+    #define LG_HOOK_HAS_DETECTION_CB 1
+#elseif defined LG_OnDetection
+    #define LG_HOOK_DETECTION_CB LG_OnDetection
+    #define LG_HOOK_HAS_DETECTION_CB 1
+#else
+    #define LG_HOOK_HAS_DETECTION_CB 0
+#endif
+
+#if defined LG_HOOK_PENALTY_APPLY_CB
+    #define LG_HOOK_HAS_PENALTY_APPLY_CB 1
+#elseif defined LG_OnPenaltyApply
+    #define LG_HOOK_PENALTY_APPLY_CB LG_OnPenaltyApply
+    #define LG_HOOK_HAS_PENALTY_APPLY_CB 1
+#else
+    #define LG_HOOK_HAS_PENALTY_APPLY_CB 0
+#endif
+
+#if defined LG_HOOK_PENALTY_APPLIED_CB
+    #define LG_HOOK_HAS_PENALTY_APPLIED_CB 1
+#elseif defined LG_OnPenaltyApplied
+    #define LG_HOOK_PENALTY_APPLIED_CB LG_OnPenaltyApplied
+    #define LG_HOOK_HAS_PENALTY_APPLIED_CB 1
+#else
+    #define LG_HOOK_HAS_PENALTY_APPLIED_CB 0
+#endif
+
+#if LG_HOOK_HAS_DETECTION_CB
+    forward LG_HOOK_DETECTION_CB(playerid, category, amount, newScore, reason[]);
+#endif
+
+#if LG_HOOK_HAS_PENALTY_APPLY_CB
+    forward LG_HOOK_PENALTY_APPLY_CB(playerid, category, &penalty);
+#endif
+
+#if LG_HOOK_HAS_PENALTY_APPLIED_CB
+    forward LG_HOOK_PENALTY_APPLIED_CB(playerid, category, penalty);
+#endif
 
 #include <lg_core>
 #include <lg_score>
