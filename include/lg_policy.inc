@@ -189,7 +189,7 @@ stock E_LG_PENALTY_TYPE:LG_DetectorRaise(playerid, E_LG_SCORE_CATEGORY:category,
         return LG_PENALTY_NONE;
     }
 
-    if (!LG_CategoryEnabled[category])
+    if (!LG_IsCategoryEnabled(category))
     {
         return LG_PENALTY_NONE;
     }
