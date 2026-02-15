@@ -216,6 +216,11 @@ stock LG_MovementAnalyzeWindow(playerid)
 
 stock LG_DetectorMovementTick()
 {
+    if (!LG_IsCategoryEnabled(LG_SCORE_MOVEMENT))
+    {
+        return 1;
+    }
+
     new now = GetTickCount();
 
     for (new playerid = 0; playerid < MAX_PLAYERS; playerid++)

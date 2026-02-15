@@ -123,6 +123,9 @@ Yeni kategoriler:
 - Hover ve z-spike hesapları minimum snapshot ile yapılır, `sqrt` kullanılmaz.
 - Teleport/interior/VW benzeri sıçramalarda movement kontrolü skip + reset alır.
 - Debug score log default kapalıdır (`LG_DEBUG_SCORE_LOG=0`).
+- Hook callback'leri tanimli degilse hook call path'i compile-time kapali kalir; ekstra reason hazirlama/call maliyeti olusmaz.
+- Debug kapaliyken `LG_LOG_INFO` loglari en erken noktada elenir; format/printf maliyeti uretilmez.
+- Bir category runtime'da disable ise ilgili detector entry noktasinda erken cikar; native call ve detector analizi hic calismaz.
 
 
 ## 6) Hook ve Runtime Kontrol Katmanı (v0.0.5)

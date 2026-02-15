@@ -4,6 +4,13 @@ Tüm önemli değişiklikler bu dosyada tutulur.
 
 ## [0.0.5]
 
+### Optimize Sprint (Observability Control Layer)
+- Hook callback maliyeti optimize edildi: hook olmayan derlemelerde detection/penalty hook path'i ekstra is yapmaz.
+- Penalty evaluate akisinda `LG_OnPenaltyApply` sonrasi `LG_PENALTY_NONE` erken cikisi sertlestirildi; ceza uygulanmadan akistan donulur.
+- Runtime category enable kontrolleri detector entry noktalarina ve core tick dispatch katmanina alindi; disabled moduller detector/native call calistirmaz.
+- `LG_Log` icinde log-level + debug gate format oncesine alinarak debug kapaliyken INFO format maliyeti sifirlandi.
+- `LG_SetCategoryEnabled` ve `LG_SetDebugMode` degisiklik yoksa early-return yapacak sekilde hafifletildi.
+
 ### Added
 - Observability hook forward'ları eklendi: `LG_OnDetection`, `LG_OnPenaltyApply`, `LG_OnPenaltyApplied`.
 - Category bazlı runtime kontrol API'si eklendi: `LG_SetCategoryEnabled`.

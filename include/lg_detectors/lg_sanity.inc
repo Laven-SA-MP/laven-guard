@@ -5,6 +5,11 @@
 
 stock LG_DetectorSanityTick()
 {
+    if (!LG_IsCategoryEnabled(LG_SCORE_SANITY))
+    {
+        return 1;
+    }
+
     new now = GetTickCount();
 
     for (new playerid = 0; playerid < MAX_PLAYERS; playerid++)

@@ -560,6 +560,11 @@ stock LG_SetCategoryEnabled(E_LG_SCORE_CATEGORY:category, bool:enabled)
         return 0;
     }
 
+    if (LG_CategoryEnabled[category] == enabled)
+    {
+        return 1;
+    }
+
     LG_CategoryEnabled[category] = enabled;
     return 1;
 }
@@ -582,6 +587,11 @@ stock bool:LG_IsCategoryEnabled(E_LG_SCORE_CATEGORY:category)
 
 stock LG_SetDebugMode(bool:enabled)
 {
+    if (LG_DebugMode == enabled)
+    {
+        return 1;
+    }
+
     LG_DebugMode = enabled;
     return 1;
 }

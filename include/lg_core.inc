@@ -8,12 +8,14 @@ forward LG_Core_TickSpeed();
 
 stock LG_Log(E_LG_LOG_LEVEL:level, const message[])
 {
-    if (level == LG_LOG_INFO)
+    if (level < LG_LOG_LEVEL_DEFAULT)
     {
-        if (!LG_DebugMode || level < LG_LOG_LEVEL_DEFAULT)
-        {
-            return 1;
-        }
+        return 1;
+    }
+
+    if (level == LG_LOG_INFO && !LG_DebugMode)
+    {
+        return 1;
     }
 
     new levelText[8];
@@ -166,24 +168,33 @@ public LG_Core_TickDecay()
 public LG_Core_TickSpeed()
 {
     #if LG_SPEED_CHECK_ENABLED
-        LG_DetectorSpeedTick();
+        if (LG_IsCategoryEnabled(LG_SCORE_SPEED))
+        {
+            LG_DetectorSpeedTick();
+        }
 
         LG_CoreTickCount++;
 
         #if LG_MOVEMENT_ENABLE
-            new movementTickEvery = LG_MOVEMENT_TICK_EVERY_N_TICKS;
-            if (movementTickEvery <= 1 || (LG_CoreTickCount % movementTickEvery) == 0)
+            if (LG_IsCategoryEnabled(LG_SCORE_MOVEMENT))
             {
-                LG_DetectorMovementTick();
+                new movementTickEvery = LG_MOVEMENT_TICK_EVERY_N_TICKS;
+                if (movementTickEvery <= 1 || (LG_CoreTickCount % movementTickEvery) == 0)
+                {
+                    LG_DetectorMovementTick();
+                }
             }
         #endif
 
         #if LG_SANITY_ENABLE
-            // 0 veya negatif deger verilirse guvenli sekilde her tick calisir.
-            new sanityTickEvery = LG_SANITY_TICK_EVERY_N_TICKS;
-            if (sanityTickEvery <= 1 || (LG_CoreTickCount % sanityTickEvery) == 0)
+            if (LG_IsCategoryEnabled(LG_SCORE_SANITY))
             {
-                LG_DetectorSanityTick();
+                // 0 veya negatif deger verilirse guvenli sekilde her tick calisir.
+                new sanityTickEvery = LG_SANITY_TICK_EVERY_N_TICKS;
+                if (sanityTickEvery <= 1 || (LG_CoreTickCount % sanityTickEvery) == 0)
+                {
+                    LG_DetectorSanityTick();
+                }
             }
         #endif
     #endif

@@ -5,6 +5,11 @@
 
 stock LG_DetectorFloodOnText(playerid, const text[])
 {
+    if (!LG_IsCategoryEnabled(LG_SCORE_FLOOD))
+    {
+        return 1;
+    }
+
     #if LG_CHAT_FLOOD_ENABLED
         new now = GetTickCount();
 

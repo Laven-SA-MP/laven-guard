@@ -155,13 +155,6 @@ stock E_LG_PENALTY_TYPE:LG_PolicyEvaluate(playerid, E_LG_SCORE_CATEGORY:category
     new score = LG_ScoreGet(playerid, category);
     new E_LG_PENALTY_TYPE:penalty = LG_PolicyResolve(category, score);
 
-    if (penalty != LG_PENALTY_NONE && LG_PolicyCanLog(playerid, category, GetTickCount()))
-    {
-        new logMessage[144];
-        format(logMessage, sizeof(logMessage), "Threshold tetiklendi p:%d c:%d score:%d (%s)", playerid, _:category, score, reason);
-        LG_Log(LG_LOG_WARN, logMessage);
-    }
-
     #if LG_HOOK_HAS_PENALTY_APPLY_CB
         LG_HOOK_PENALTY_APPLY_CB(playerid, _:category, penalty);
     #endif
@@ -169,6 +162,13 @@ stock E_LG_PENALTY_TYPE:LG_PolicyEvaluate(playerid, E_LG_SCORE_CATEGORY:category
     if (penalty == LG_PENALTY_NONE)
     {
         return penalty;
+    }
+
+    if (LG_PolicyCanLog(playerid, category, GetTickCount()))
+    {
+        new logMessage[144];
+        format(logMessage, sizeof(logMessage), "Threshold tetiklendi p:%d c:%d score:%d (%s)", playerid, _:category, score, reason);
+        LG_Log(LG_LOG_WARN, logMessage);
     }
 
     // RP-safe varsayilan davranis:
