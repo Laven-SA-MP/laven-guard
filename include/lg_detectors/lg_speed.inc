@@ -19,6 +19,11 @@ stock LG_DetectorSpeedInitPlayer(playerid)
 
 stock LG_DetectorSpeedTick()
 {
+    if (!LG_IsCategoryEnabled(LG_SCORE_SPEED))
+    {
+        return 1;
+    }
+
     new now = GetTickCount();
 
     for (new playerid = 0; playerid < MAX_PLAYERS; playerid++)
