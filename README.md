@@ -99,13 +99,6 @@ Framework `#define` ile yönetilir:
 - Speed/Sanity/Movement category default kontrol define'ları eklendi: `LG_ENABLE_SPEED`, `LG_ENABLE_SANITY`, `LG_ENABLE_MOVEMENT`.
 - Yeni timer eklenmeden mevcut policy mimarisi korunarak entegrasyon tamamlandı.
 
-## 📌 v0.0.4 Notları
-
-- Movement anomaly katmanı eklendi (`LG_SCORE_MOVEMENT`) ve decay/total hesaplarına dahil edildi.
-- 5 snapshot pencere + 2 tickte 1 sampling ile sustained speed, z-spike ve hover pattern analizi eklendi.
-- Interior/VW değişimi, speed cooldown, absurd delta ve connect grace koşullarında RP-safe skip akışı eklendi.
-- Core speed tick içinde movement + sanity akışı korunarak yeni timer açılmadı.
-
 ## 🧭 Destek
 
 - Hata / geliştirme: GitHub Issues
