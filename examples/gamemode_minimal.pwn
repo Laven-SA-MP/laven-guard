@@ -1,6 +1,9 @@
 #include <a_samp>
 #include <laven_guard>
 
+// Opsiyonel LG hook callback'leri bu ornekte bilincli olarak implement edilmiyor.
+// include/laven_guard.inc callback guard'lari sayesinde derleme sorunsuz devam eder.
+
 main()
 {
     return 1;

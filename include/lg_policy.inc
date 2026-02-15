@@ -162,8 +162,8 @@ stock E_LG_PENALTY_TYPE:LG_PolicyEvaluate(playerid, E_LG_SCORE_CATEGORY:category
         LG_Log(LG_LOG_WARN, logMessage);
     }
 
-    #if defined LG_OnPenaltyApply
-        LG_OnPenaltyApply(playerid, _:category, penalty);
+    #if LG_HOOK_HAS_PENALTY_APPLY_CB
+        LG_HOOK_PENALTY_APPLY_CB(playerid, _:category, penalty);
     #endif
 
     if (penalty == LG_PENALTY_NONE)
@@ -175,8 +175,8 @@ stock E_LG_PENALTY_TYPE:LG_PolicyEvaluate(playerid, E_LG_SCORE_CATEGORY:category
     // Flood = soft odakli, Speed = kick odakli, Weapon = warn odakli, Sanity = soft warn odakli.
     LG_PolicyApply(playerid, category, penalty, reason);
 
-    #if defined LG_OnPenaltyApplied
-        LG_OnPenaltyApplied(playerid, _:category, _:penalty);
+    #if LG_HOOK_HAS_PENALTY_APPLIED_CB
+        LG_HOOK_PENALTY_APPLIED_CB(playerid, _:category, _:penalty);
     #endif
 
     return penalty;
@@ -196,9 +196,9 @@ stock E_LG_PENALTY_TYPE:LG_DetectorRaise(playerid, E_LG_SCORE_CATEGORY:category,
 
     LG_ScoreAdd(playerid, category, amount, reason);
 
-    #if defined LG_OnDetection
+    #if LG_HOOK_HAS_DETECTION_CB
         new newScore = LG_ScoreGet(playerid, category);
-        LG_OnDetection(playerid, _:category, amount, newScore, reason);
+        LG_HOOK_DETECTION_CB(playerid, _:category, amount, newScore, reason);
     #endif
 
     return LG_PolicyEvaluate(playerid, category, reason);
