@@ -148,6 +148,47 @@ public LG_OnPenaltyApply(playerid, category, &penalty)
 }
 ```
 
+Ek örnekler:
+
+1) Movement category için penalty'yi `LG_PENALTY_SOFT`'a çekme:
+
+```pawn
+public LG_OnPenaltyApply(playerid, category, &penalty)
+{
+    if (category == LG_SCORE_MOVEMENT && penalty > LG_PENALTY_SOFT)
+    {
+        penalty = LG_PENALTY_SOFT;
+    }
+    return 1;
+}
+```
+
+2) Ban kararını kick'e çevirme:
+
+```pawn
+public LG_OnPenaltyApply(playerid, category, &penalty)
+{
+    if (penalty == LG_PENALTY_BAN)
+    {
+        penalty = LG_PENALTY_KICK;
+    }
+    return 1;
+}
+```
+
+3) `LG_PENALTY_NONE` verip cezayı iptal etme:
+
+```pawn
+public LG_OnPenaltyApply(playerid, category, &penalty)
+{
+    if (category == LG_SCORE_SANITY)
+    {
+        penalty = LG_PENALTY_NONE;
+    }
+    return 1;
+}
+```
+
 Runtime kontrol API:
 
 - `LG_SetCategoryEnabled(category, bool:enabled)`
@@ -160,4 +201,3 @@ Kategori defaultları config define üzerinden başlatılır:
 - `LG_ENABLE_SANITY`
 - `LG_ENABLE_MOVEMENT`
 - `LG_DEBUG_DEFAULT`
-
