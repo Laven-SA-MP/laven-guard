@@ -520,6 +520,22 @@ stock LG_SetCategoryEnabled(E_LG_SCORE_CATEGORY:category, bool:enabled)
     return 1;
 }
 
+stock bool:LG_IsCategoryEnabled(E_LG_SCORE_CATEGORY:category)
+{
+    if (category < LG_SCORE_FLOOD || category >= LG_SCORE_CATEGORY_COUNT)
+    {
+        return false;
+    }
+
+    // TOTAL kategori puani turetilir; daima acik kabul edilir ve disaridan degistirilemez.
+    if (category == LG_SCORE_TOTAL)
+    {
+        return true;
+    }
+
+    return LG_CategoryEnabled[category];
+}
+
 stock LG_SetDebugMode(bool:enabled)
 {
     LG_DebugMode = enabled;
