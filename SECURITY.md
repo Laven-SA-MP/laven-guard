@@ -4,7 +4,7 @@ LAVEN GUARD için exploit, abuse veya güvenlik açığı raporlarını sorumlu 
 
 ## Raporlama
 
-- İletişim: security@laven.dev
+- İletişim: https://discord.gg/MNcdsqp68
 - Konu başlığı: `[LAVEN GUARD SECURITY] <kısa özet>`
 - Beklenen içerik: etki seviyesi, yeniden üretim adımları, PoC (varsa), önerilen düzeltme.
 
