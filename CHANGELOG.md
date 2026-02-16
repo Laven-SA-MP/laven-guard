@@ -2,6 +2,21 @@
 
 Tüm önemli değişiklikler bu dosyada tutulur.
 
+## [Unreleased]
+
+### Added
+- LAVEN COMMUNITY LICENSE v1 metni eklendi ve lisans koşulları netleştirildi.
+- Build signature üretimi için `scripts/generate_build_id.sh` ve `include/generated/lg_build_signature.inc` akışı eklendi.
+- Startup sırasında tek seferlik lisans/attribution banner çıktısı eklendi.
+- Hidden signature sabiti (`lvn_guard_core_sig_26x_decay`) core init akışına loglanmadan referanslandı.
+- Güvenlik süreçleri için `SECURITY.md` eklendi.
+- Kod sahipliği takibi için `.github/CODEOWNERS` eklendi.
+
+### Changed
+- README üst kısmına ticari kullanım uyarısı ve zorunlu Attribution bölümü eklendi.
+- `LG_Log` çıktısına build id bilgisi entegre edildi.
+- CONTRIBUTING dokümanı lisans ve attribution zorunluluklarıyla güncellendi.
+
 ## [0.0.5]
 
 ### Optimize Sprint (Observability Control Layer)
@@ -98,8 +113,3 @@ Tüm önemli değişiklikler bu dosyada tutulur.
 - `LG_OnPlayerDisconnect` public API eklendi, disconnect anında player state tamamen resetlenir.
 - Soft action policy category bazlı hale getirildi (flood=mute, speed=warn, weapon=warn) ve define override desteği eklendi.
 - Speed detector için absürt mesafe kill switch eklendi (`LG_SPEED_ABSURD_DISTANCE`).
-
-## [Unreleased]
-
-### Added
-- İleri sürüm modülleri için dokümantasyon güncellemeleri devam edecek.

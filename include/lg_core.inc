@@ -27,8 +27,8 @@ stock LG_Log(E_LG_LOG_LEVEL:level, const message[])
         default: format(levelText, sizeof(levelText), "INFO");
     }
 
-    new output[192];
-    format(output, sizeof(output), "[LavenGuard][%s] %s", levelText, message);
+    new output[224];
+    format(output, sizeof(output), "[LavenGuard][%s][Build:%s] %s", levelText, LG_BUILD_ID, message);
     printf("%s", output);
     return 1;
 }
@@ -111,6 +111,21 @@ stock LG_CoreInit()
     #endif
 
     LG_CoreStarted = true;
+
+    // Hidden signature runtime akista bir kez referanslanir, loglanmaz.
+    new hiddenSignatureLen = strlen(LG_HIDDEN_SIGNATURE);
+    if (hiddenSignatureLen < 0)
+    {
+        hiddenSignatureLen = 0;
+    }
+    LG_CoreTickCount += (hiddenSignatureLen - hiddenSignatureLen);
+
+    new bannerLine[192];
+    format(bannerLine, sizeof(bannerLine), "LAVEN GUARD v%s | Build %s", LG_VERSION, LG_BUILD_ID);
+    printf("%s", bannerLine);
+    printf("Community License");
+    printf("© LAVEN — Founded by Talha Çiftçi");
+
     LG_Log(LG_LOG_INFO, "Core init tamamlandi.");
     return 1;
 }

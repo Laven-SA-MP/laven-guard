@@ -1,29 +1,21 @@
-# Katkı Rehberi
+# Contributing
 
-Laven Guard, sade ve üretim odaklı katkıları hedefler.
+LAVEN GUARD katkıları düzenli, küçük ve izlenebilir PR'lar ile kabul edilir.
 
-## Temel İlkeler
+## PR Süreci
 
-- Değişiklikleri küçük ve odaklı tutun.
-- RP odaklı kullanım senaryolarını gözetin.
-- Performans maliyetini artıran eklemelerde gerekçe belirtin.
-- Türkçe dokümantasyon standardını koruyun.
+1. Issue açarak problemi veya geliştirme ihtiyacını net tanımlayın.
+2. Değişikliği tek bir amaca odaklı ve minimal diff ile hazırlayın.
+3. Kod, dokümantasyon ve gerekiyorsa örnek kullanım güncellemelerini aynı PR içinde verin.
+4. PR açıklamasında ne değişti, neden değişti ve nasıl test edildi bölümlerini belirtin.
 
-## Geliştirme Akışı
+## Lisans ve Hukuki Koşullar
 
-1. Sorunu veya geliştirmeyi Issue ile tanımlayın.
-2. İlgili kapsamı netleştirin (modül, callback, log davranışı).
-3. Değişikliği minimal diff ile uygulayın.
-4. Örnek kullanım ve dokümantasyonu güncelleyin.
+- Tüm katkılar `LICENSE` dosyasındaki **LAVEN COMMUNITY LICENSE v1** koşullarına tabidir.
+- Ticari kullanım, satış, yeniden paketleme ve ücretli sistemlere gömme yasaktır.
 
-## Kod Standartları
+## Attribution Zorunluluğu
 
-- SAMP 0.3.7 Pawn uyumluluğu zorunludur.
-- Dış bağımlılık minimum olmalıdır (`a_samp` temel).
-- Manual entegrasyon her zaman çalışmalıdır.
-- Y_HOOKS entegrasyonu opsiyonel ve çakışmasız olmalıdır.
-
-## Sürüm ve Değişiklik Kaydı
-
-- Kullanıcıya etkili değişiklikleri `CHANGELOG.md` dosyasına ekleyin.
-- Yol haritası dışı değişikliklerde teknik gerekçe belirtin.
+- `README.md` içindeki Attribution bölümü korunmalıdır.
+- Startup banner içindeki LAVEN kredileri kaldırılamaz.
+- Attribution kaldırma girişimleri lisans ihlalidir.

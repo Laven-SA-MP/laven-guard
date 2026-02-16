@@ -8,6 +8,7 @@
 // Not: Manual integration required.
 
 #include <a_samp>
+#include "generated/lg_build_signature.inc"
 
 #define LG_VERSION "0.0.5"
 
