@@ -1,3 +1,5 @@
+> ⚠️ Ticari kullanım yasaktır. Detaylar için `LICENSE` dosyasını okuyun.
+
 # 🛡️ Laven Guard
 
 SAMP 0.3.7 Pawn ekosistemi için RP odaklı anti-abuse / koruma framework.
@@ -107,4 +109,8 @@ Framework `#define` ile yönetilir:
 
 ---
 
-<sub>© LAVEN — Founded by Talha Çiftçi</sub>
+## Attribution
+
+- © LAVEN — Founded by Talha Çiftçi
+- Bu projeyi kullanan tüm sunucular README veya dokümanlarında bu krediyi korumalıdır.
+- Bu bölümün kaldırılması lisans ihlalidir.
